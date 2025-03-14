@@ -1,1 +1,74 @@
 /* You can add global styles to this file, and also import other style files */
+/* Importar normalize.css primero */
+@import url('normalize.css');
+
+/* Variables y estilos globales */
+:root {
+    --fuenteMeading: 'PT Sans', sans-serif;
+    --fuenteParrafos: Arial, sans-serif;
+   
+}
+
+html {
+    box-sizing: border-box; /*para que el border o el padding no afecte el ancho de nuestros elementos*/
+    font-size: 62.5%;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: var(--fuenteParrafos);
+    font-size: 1.6rem;
+    line-height: 2; /*interlineado*/
+}
+
+/* Estilos globales */
+.contenedor {
+    max-width: 120rem;
+    width: 90%;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--fuenteMeading);
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 4.8rem;
+}
+
+h2 {
+    font-size: 4rem;
+}
+
+h3 {
+    font-size: 3.2rem;
+}
+
+h4 {
+    font-size: 2.8rem;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Utilidades */
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.centrar-texto {
+    text-align: center;
+}
