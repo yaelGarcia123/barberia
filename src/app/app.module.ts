@@ -5,11 +5,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { InicioComponent } from './inicio/inicio.component';
+import { InventarioComponent } from './inventario/inventario.component';
+import { StoreComponent } from './store/store.component';
+import { LogisticaComponent } from './logistica/logistica.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InicioComponent
+    InicioComponent,
+    InventarioComponent,
+    StoreComponent,
+    LogisticaComponent
   ],
   imports: [
     BrowserModule,
