@@ -1,43 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductoService, Producto } from '../services/producto.service';
+import { ProductoService } from '../productos/producto.service';
+import { Producto } from '../producto.model';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css'],
+  styleUrls: ['./productos.component.css']
 })
 export class ProductosComponent implements OnInit {
-  productos: Producto[] = [];
-  nuevoProducto: Producto = { nombre: '' };
+  
 
-  constructor(private productoService: ProductoService) {}
+ 
+  productos: Producto[] = [];
+
+  constructor(private productoService: ProductoService) { }
 
   ngOnInit(): void {
-    this.obtenerProductos();
+    this.getProductos();
   }
 
-  obtenerProductos() {
-    this.productoService.getProductos().subscribe((data) => {
-      this.productos = data;
-    });
-  }
-
-  agregarProducto() {
-    if (this.nuevoProducto.nombre.trim()) {
-      this.productoService
-        .agregarProducto(this.nuevoProducto)
-        .subscribe((producto) => {
-          this.productos.push(producto);
-          this.nuevoProducto = { nombre: '' };
-        });
-    }
-  }
-
-  eliminarProducto(id?: number) {
-    if (id) {
-      this.productoService.eliminarProducto(id).subscribe(() => {
-        this.productos = this.productos.filter((p) => p.id !== id);
-      });
-    }
+  getProductos(): void {
+    this.productoService.getProductos().subscribe(
+      (data: Producto[]) => {
+        this.productos = data;
+      },
+      (error) => {
+        console.error('Error al obtener los productos', error);
+      }
+    );
   }
 }

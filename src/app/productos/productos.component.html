@@ -1,15 +1,6 @@
-<div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://via.placeholder.com/150" class="card-img-top" alt="Imagen">
-          <div class="card-body">
-            <h5 class="card-title">Producto 1</h5>
-            <p class="card-text">Descripción breve del producto.</p>
-            <a href="#" class="btn btn-primary">Ver detalles</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
+<h2>Lista de Productos</h2>
+<ul>
+  <li *ngFor="let producto of productos">
+    {{ producto.nombre }}
+  </li>
+</ul>

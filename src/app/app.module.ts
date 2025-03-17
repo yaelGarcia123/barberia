@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http'; // Importación que falta
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { InicioComponent } from './inicio/inicio.component';
@@ -10,6 +10,10 @@ import { InventarioComponent } from './inventario/inventario.component';
 import { StoreComponent } from './store/store.component';
 import { LogisticaComponent } from './logistica/logistica.component';
 import { ProductosComponent } from './productos/productos.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input'; 
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -26,9 +30,16 @@ import { ProductosComponent } from './productos/productos.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule, // ¡Aquí lo agregamos!
+    MatFormFieldModule, // Asegúrate de agregar este módulo
+    MatInputModule, 
+    MatTableModule,
+    HttpClientModule // 👈 Asegúrate de que esté aquí
+
+   
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
