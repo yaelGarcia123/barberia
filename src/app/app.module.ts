@@ -14,6 +14,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; 
 import { MatTableModule } from '@angular/material/table';
+import { AccountComponent } from './account/account.component';
+import { SaleComponent } from './sale/sale.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { MatTableModule } from '@angular/material/table';
     StoreComponent,
     LogisticaComponent,
     ProductosComponent,
+    AccountComponent,
+    SaleComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
