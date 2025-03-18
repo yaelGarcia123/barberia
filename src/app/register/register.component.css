@@ -14,13 +14,13 @@
     color: #fff;
   }
 
-  .login-container {
+  .register-container {
     background-color: #2e2e2e;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.4);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
   }
 
   .logo {
@@ -51,7 +51,7 @@
 
   .form .field {
     position: relative;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
   }
 
   .input-icon {
@@ -84,7 +84,7 @@
     margin-top: 1rem;
   }
 
-  .button1, .button2, .button3 {
+  .button1, .button2 {
     border: none;
     border-radius: 6px;
     padding: 0.6rem 1rem;
@@ -112,16 +112,4 @@
 
   .button2:hover {
     background-color: #666;
-  }
-
-  .button3 {
-    background: none;
-    color: #f0c040;
-    display: block;
-    margin: 1rem auto 0;
-    text-decoration: underline;
-  }
-
-  .button3:hover {
-    color: #ffd65b;
   }

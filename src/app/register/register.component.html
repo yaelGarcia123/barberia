@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro</title>
+
+</head>
+<body>
+  <div class="register-container">
+    <div class="logo">
+      <img src="../../assets/img/LogoBarberia.jpg" alt="logooo" />
+      <h1>BARBER CYS</h1>
+    </div>
+    <form class="form" #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)">
+      <p id="heading">Registro</p>
+
+      <div class="field">
+        <input name="nombre" ngModel required placeholder="Nombre" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="apellidos" ngModel required placeholder="Apellidos" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="username" ngModel required placeholder="Nombre de Usuario" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="correo" ngModel required placeholder="Correo Electrónico" class="input-field" type="email"/>
+      </div>
+
+      <div class="field">
+        <input name="password" ngModel required placeholder="Contraseña" class="input-field" type="password"/>
+      </div>
+
+      <div class="field">
+        <input name="direccion" ngModel required placeholder="Dirección" class="input-field" type="text"/>
+      </div>
+
+      <div class="btn">
+        <button class="button1" type="submit">Registrar</button>
+        <button class="button2" type="button">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

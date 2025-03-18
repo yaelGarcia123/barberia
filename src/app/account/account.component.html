@@ -1,0 +1,166 @@
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Mi Perfil</h2>
+
+  <!-- Navegación de pestañas -->
+  <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab">Datos Personales</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="direccion-tab" data-bs-toggle="tab" data-bs-target="#direccion" type="button" role="tab">Dirección</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="empresa-tab" data-bs-toggle="tab" data-bs-target="#empresa" type="button" role="tab">Empresa</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="pago-tab" data-bs-toggle="tab" data-bs-target="#pago" type="button" role="tab">Método de Pago</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" data-bs-target="#pedidos" type="button" role="tab">Pedidos</button>
+    </li>
+  </ul>
+
+  <!-- Contenido de pestañas -->
+  <div class="tab-content" id="profileTabsContent">
+    <!-- Datos Personales -->
+    <div class="tab-pane fade show active" id="datos" role="tabpanel">
+      <form (ngSubmit)="guardarDatos()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre Completo</label>
+            <input type="text" id="nombre" class="form-control" [(ngModel)]="perfil.nombre" name="nombre" required>
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" id="email" class="form-control" [(ngModel)]="perfil.email" name="email" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="telefono" class="form-label">Teléfono</label>
+          <input type="text" id="telefono" class="form-control" [(ngModel)]="perfil.telefono" name="telefono">
+        </div>
+        <button class="btn btn-primary">Guardar Cambios</button>
+      </form>
+    </div>
+
+    <!-- Dirección -->
+    <div class="tab-pane fade" id="direccion" role="tabpanel">
+      <form (ngSubmit)="guardarDireccion()">
+        <div class="mb-3">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input type="text" id="direccion" class="form-control" [(ngModel)]="perfil.direccion" name="direccion" required>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input type="text" id="ciudad" class="form-control" [(ngModel)]="perfil.ciudad" name="ciudad">
+          </div>
+          <div class="col-md-6">
+            <label for="codigoPostal" class="form-label">Código Postal</label>
+            <input type="text" id="codigoPostal" class="form-control" [(ngModel)]="perfil.codigoPostal" name="codigoPostal">
+          </div>
+        </div>
+        <button class="btn btn-primary">Guardar Dirección</button>
+      </form>
+    </div>
+
+    <!-- Empresa -->
+    <div class="tab-pane fade" id="empresa" role="tabpanel">
+      <form (ngSubmit)="guardarEmpresa()">
+        <div class="mb-3">
+          <label for="esEmpresa" class="form-label">¿Eres empresa?</label>
+          <select id="esEmpresa" class="form-select" [(ngModel)]="perfil.esEmpresa" name="esEmpresa">
+            <option [value]="false">No</option>
+            <option [value]="true">Sí</option>
+          </select>
+        </div>
+        <div *ngIf="perfil.esEmpresa">
+          <div class="mb-3">
+            <label for="nombreEmpresa" class="form-label">Nombre de Empresa</label>
+            <input type="text" id="nombreEmpresa" class="form-control" [(ngModel)]="perfil.nombreEmpresa" name="nombreEmpresa">
+          </div>
+          <div class="mb-3">
+            <label for="ruc" class="form-label">RUC / NIT</label>
+            <input type="text" id="ruc" class="form-control" [(ngModel)]="perfil.ruc" name="ruc">
+          </div>
+        </div>
+        <button class="btn btn-primary">Guardar Empresa</button>
+      </form>
+    </div>
+
+    <!-- Método de Pago -->
+    <div class="tab-pane fade" id="pago" role="tabpanel">
+      <form (ngSubmit)="guardarPago()">
+        <div class="mb-3">
+          <label for="tarjeta" class="form-label">Número de Tarjeta</label>
+          <input type="text" id="tarjeta" class="form-control" maxlength="16" [(ngModel)]="perfil.tarjeta" name="tarjeta" placeholder="1234 5678 9012 3456" required>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="fechaExp" class="form-label">Fecha Expiración</label>
+            <input type="text" id="fechaExp" class="form-control" [(ngModel)]="perfil.fechaExp" name="fechaExp" placeholder="MM/AA" required>
+          </div>
+          <div class="col-md-6">
+            <label for="cvv" class="form-label">CVV</label>
+            <input type="text" id="cvv" class="form-control" maxlength="4" [(ngModel)]="perfil.cvv" name="cvv" required>
+          </div>
+        </div>
+        <button class="btn btn-success">Guardar Método de Pago</button>
+      </form>
+    </div>
+
+    <!-- Pedidos -->
+    <div class="tab-pane fade" id="pedidos" role="tabpanel">
+      <h4 class="mb-4">Pedidos en Curso</h4>
+      <ul class="list-group mb-3">
+        <li class="list-group-item">
+          <h5>Pedido #1</h5>
+          <p>Estado: Enviado a la Bodega</p>
+          <button class="btn btn-info btn-sm" (click)="abrirModal(1)">Ver estado</button>
+        </li>
+        <li class="list-group-item">
+          <h5>Pedido #2</h5>
+          <p>Estado: Pago confirmado</p>
+          <button class="btn btn-info btn-sm" (click)="abrirModal(2)">Ver estado</button>
+        </li>
+      </ul>
+
+      <h4 class="mb-4">Pedidos Pasados</h4>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h5>Pedido #3</h5>
+          <p>Estado: Entregado</p>
+        </li>
+        <li class="list-group-item">
+          <h5>Pedido #4</h5>
+          <p>Estado: Entregado</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Estado -->
+<div class="modal fade" id="modalEstado" tabindex="-1" aria-labelledby="modalEstadoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEstadoLabel">Estado del Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Pasos Completados:</h5>
+        <ul>
+          <li *ngFor="let paso of pasosCompletados">{{ paso }}</li>
+        </ul>
+        <h5>Pasos Restantes:</h5>
+        <ul>
+          <li *ngFor="let paso of pasosRestantes">{{ paso }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
