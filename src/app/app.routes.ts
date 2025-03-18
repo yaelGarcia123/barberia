@@ -8,6 +8,8 @@ import { ProductosComponent } from './productos/productos.component';
 import { AccountComponent } from './account/account.component';
 import { SaleComponent } from './sale/sale.component';
 import { RegisterComponent } from './register/register.component';
+import { AdminventasComponent } from './adminventas/adminventas.component';
+import { AdmincomprasComponent } from './admincompras/admincompras.component';
 export const routes: Routes = [
     { path: '', redirectTo: 'productos', pathMatch: 'full' }, // Redirecciona la ruta raíz a 'inicio' (opcional)
 
@@ -15,10 +17,13 @@ export const routes: Routes = [
     { path: 'store', component: StoreComponent },
     { path: 'inventario', component: InventarioComponent },
     { path: 'logistica', component: LogisticaComponent },
-    {path:'productos', component: ProductosComponent},
-    {path: 'Account', component: AccountComponent},
-    {path:'Sale', component: SaleComponent},
-    {path:'Register', component: RegisterComponent}
+    { path:'productos', component: ProductosComponent},
+    { path: 'Account', component: AccountComponent},
+    { path:'Sale', component: SaleComponent},
+    { path:'Register', component: RegisterComponent},
+    { path:'AdminVentas', component: AdminventasComponent},
+    { path:'AdminCompras', component:AdmincomprasComponent}
+
 
 
 ];

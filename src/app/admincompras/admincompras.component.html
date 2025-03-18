@@ -1,0 +1,27 @@
+
+<div class="proveedores-lista">
+    <h2>Proveedores Registrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proveedor of proveedores">
+          <td>{{ proveedor.nombre }}</td>
+          <td>{{ proveedor.telefono }}</td>
+          <td>
+            <button (click)="seleccionarProveedor(proveedor)">Seleccionar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="selectedProveedor">
+      <h3>Productos de {{ selectedProveedor.nombre }}</h3>
+      <app-productos-lista [proveedorId]="selectedProveedor.id"></app-productos-lista>
+    </div>
+  </div>

@@ -17,6 +17,8 @@ import { MatTableModule } from '@angular/material/table';
 import { AccountComponent } from './account/account.component';
 import { SaleComponent } from './sale/sale.component';
 import { RegisterComponent } from './register/register.component';
+import { AdmincomprasComponent } from './admincompras/admincompras.component';
+import { AdminventasComponent } from './adminventas/adminventas.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { RegisterComponent } from './register/register.component';
     ProductosComponent,
     AccountComponent,
     SaleComponent,
-    RegisterComponent
+    RegisterComponent,
+    AdmincomprasComponent,
+    AdminventasComponent
   ],
   imports: [
     BrowserModule,
