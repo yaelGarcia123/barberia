@@ -1,5 +1,43 @@
-<h2>Productos</h2>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">📦 Gestión de Envíos</h1>
 
-<button mat-flat-button routerLink="/productos">
-    Crear un nuevo producto
-</button>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Estado</th>
+          <th>Repartidor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td class="fw-bold">{{ order.id }}</td>
+          <td>{{ order.cliente }}</td>
+          <td>{{ order.direccion }}</td>
+          <td>
+            <span class="badge fs-6" [ngClass]="{
+              'bg-warning text-dark': order.estado === 'Pendiente',
+              'bg-primary': order.estado === 'En tránsito',
+              'bg-success': order.estado === 'Entregado'
+            }">
+              {{ order.estado }}
+            </span>
+          </td>
+          <td class="fw-bold" [ngClass]="{'text-danger': !order.repartidor}">
+            {{ order.repartidor || 'No asignado' }}
+          </td>
+          <td>
+            <select class="form-select form-select-lg" (change)="assignRepartidor(order?.id, $event)">
+              <option value="">Asignar Repartidor</option>
+              <option *ngFor="let rep of repartidores" [value]="rep">{{ rep }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
