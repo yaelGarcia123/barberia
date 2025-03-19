@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RegisterService } from '../register/register.service';
+import { AuthService } from '../auth.service'; // Importa el AuthService
 
 @Component({
   selector: 'app-register',
@@ -8,7 +9,11 @@ import { RegisterService } from '../register/register.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  constructor(private router: Router, private registerService: RegisterService) {}
+  constructor(
+    private router: Router,
+    private registerService: RegisterService,
+    private authService: AuthService // Inyecta el AuthService
+  ) {}
 
   onRegister(form: any) {
     const {
@@ -51,7 +56,18 @@ export class RegisterComponent {
     this.registerService.registerCliente(cliente).subscribe(
       (response) => {
         alert(`¡Registro exitoso!\nBienvenido, ${nombre} ${apellidoPaterno}`);
-        this.router.navigate(['/inicio']);
+
+        // Llamar al método de inicio de sesión con las credenciales del usuario recién registrado
+        this.authService.login(nombreUsuario, password).subscribe(
+          (loginResponse) => {
+            localStorage.setItem('token', loginResponse.token); // Guardar el token en el localStorage
+            this.router.navigate(['/store']); // Redirigir al dashboard o a la página principal
+          },
+          (loginError) => {
+            console.error('Error en el inicio de sesión automático', loginError);
+            alert('Error en el inicio de sesión automático. Por favor, inicia sesión manualmente.');
+          }
+        );
       },
       (error) => {
         console.error('Error en el registro:', error);
