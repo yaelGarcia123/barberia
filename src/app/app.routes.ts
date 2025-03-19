@@ -21,7 +21,7 @@ export const routes: Routes = [
     { path: 'store', component: StoreComponent },
     { path: 'inventario', component: InventarioComponent },
     { path: 'logistica', component: LogisticaComponent },
-<<<<<<< HEAD
+
     { path:'productos', component: ProductosComponent},
     { path: 'Account', component: AccountComponent},
     { path:'Sale', component: SaleComponent},
@@ -29,12 +29,6 @@ export const routes: Routes = [
     { path:'AdminVentas', component: AdminventasComponent},
     { path:'AdminCompras', component:AdmincomprasComponent}
 
-=======
-    {path:'productos', component: ProductosComponent},
-    {path: 'account', component: AccountComponent},
-    {path:'sale', component: SaleComponent},
-    {path:'register', component: RegisterComponent}
->>>>>>> 3f514d215d65501fecaef6a6967efcadbad6297d
 
 
 ];
