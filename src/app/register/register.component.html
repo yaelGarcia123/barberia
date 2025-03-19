@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registro</title>
-
 </head>
 <body>
   <div class="register-container">
@@ -15,20 +14,49 @@
     <form class="form" #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)">
       <p id="heading">Registro</p>
 
+      <!-- Campos existentes -->
       <div class="field">
         <input name="nombre" ngModel required placeholder="Nombre" class="input-field" type="text"/>
       </div>
 
       <div class="field">
-        <input name="apellidos" ngModel required placeholder="Apellidos" class="input-field" type="text"/>
+        <input name="apellidoPaterno" ngModel required placeholder="Apellido Paterno" class="input-field" type="text"/>
       </div>
 
       <div class="field">
-        <input name="username" ngModel required placeholder="Nombre de Usuario" class="input-field" type="text"/>
+        <input name="apellidoMaterno" ngModel placeholder="Apellido Materno" class="input-field" type="text"/>
       </div>
 
       <div class="field">
-        <input name="correo" ngModel required placeholder="Correo Electrónico" class="input-field" type="email"/>
+        <input name="rfc" ngModel placeholder="RFC" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="codigoPostal" ngModel required placeholder="Código Postal" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="calle" ngModel required placeholder="Calle" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="numExt" ngModel required placeholder="Número Exterior" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="numInt" ngModel placeholder="Número Interior" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="colonia" ngModel required placeholder="Colonia" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="ciudad" ngModel required placeholder="Ciudad" class="input-field" type="text"/>
+      </div>
+
+      <div class="field">
+        <input name="nombreUsuario" ngModel required placeholder="Nombre de Usuario" class="input-field" type="text"/>
       </div>
 
       <div class="field">
@@ -36,12 +64,16 @@
       </div>
 
       <div class="field">
-        <input name="direccion" ngModel required placeholder="Dirección" class="input-field" type="text"/>
+        <select name="sexo" ngModel required class="input-field">
+          <option value="" disabled selected>Selecciona tu sexo</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
       </div>
 
       <div class="btn">
         <button class="button1" type="submit">Registrar</button>
-        <button class="button2" type="button">Cancelar</button>
+        <button class="button2" type="button" (click)="onCancel()">Cancelar</button>
       </div>
     </form>
   </div>
