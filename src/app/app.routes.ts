@@ -23,11 +23,11 @@ export const routes: Routes = [
     { path: 'logistica', component: LogisticaComponent },
 
     { path:'productos', component: ProductosComponent},
-    { path: 'Account', component: AccountComponent},
-    { path:'Sale', component: SaleComponent},
-    { path:'Register', component: RegisterComponent},
-    { path:'AdminVentas', component: AdminventasComponent},
-    { path:'AdminCompras', component:AdmincomprasComponent}
+    { path: 'account', component: AccountComponent},
+    { path:'sale', component: SaleComponent},
+    { path:'register', component: RegisterComponent},
+    { path:'adminVentas', component: AdminventasComponent},
+    { path:'adminCompras', component:AdmincomprasComponent}
 
 
 
