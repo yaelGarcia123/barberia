@@ -12,6 +12,7 @@ export const routes: Routes = [
 
 
 
+    { path: '', redirectTo: 'inicio', pathMatch: 'full' }, // Redirecciona la ruta raíz a 'inicio' (opcional)
 
 
     { path: 'inicio', component: InicioComponent },
@@ -20,8 +21,8 @@ export const routes: Routes = [
     { path: 'logistica', component: LogisticaComponent },
     {path:'productos', component: ProductosComponent},
     {path: 'account', component: AccountComponent},
-    {path:'Sale', component: SaleComponent},
-    {path:'Register', component: RegisterComponent}
+    {path:'sale', component: SaleComponent},
+    {path:'register', component: RegisterComponent}
 
 
 ];

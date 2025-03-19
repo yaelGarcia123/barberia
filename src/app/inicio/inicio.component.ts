@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-inicio',
@@ -7,23 +8,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./inicio.component.css']
 })
 export class InicioComponent {
-  constructor(private router: Router) {}
+  username: string = '';
+  password: string = '';
 
-  // Método para manejar el Login
-  onSubmit(form: any) {
-    const { username, password } = form.value;
+  constructor(private authService: AuthService, public  router: Router) {}
 
-    // Validación simple
-    if (username === 'admin' && password === '1234') {
-      // Redirige a la pantalla de store
-      this.router.navigate(['/store']);
-    } else {
-      alert('Usuario o contraseña incorrectos');
-    }
-  }
-
-  // Método para redirigir al registro (Sign Up)
-  goToSignUp() {
-    this.router.navigate(['/Register']); // Redirige a la pantalla de registro
+  onSubmit(): void {
+    this.authService.login(this.username, this.password).subscribe(
+      (response) => {
+        localStorage.setItem('token', response.token); // Asume que el backend devuelve un token
+        this.router.navigate(['/store']); // Redirige al dashboard o a la página principal
+      },
+      (error) => {
+        console.error('Error en el inicio de sesión', error);
+        alert('Usuario o contraseña incorrectos');
+      }
+    );
   }
 }

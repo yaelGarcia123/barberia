@@ -1,30 +1,66 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { RegisterService } from '../register/register.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-constructor(private router: Router) {}
+  constructor(private router: Router, private registerService: RegisterService) {}
 
-  // Método para manejar el registro
   onRegister(form: any) {
-    const { nombre, apellidos, username, correo, password, direccion } = form.value;
+    const {
+      nombre,
+      apellidoPaterno,
+      apellidoMaterno,
+      rfc,
+      codigoPostal,
+      calle,
+      numExt,
+      numInt,
+      colonia,
+      ciudad,
+      nombreUsuario,
+      password,
+      sexo
+    } = form.value;
 
-    // Validación básica de campos
-    if (!nombre || !apellidos || !username || !correo || !password || !direccion) {
-      alert('Por favor, completa todos los campos.');
+    if (!nombre || !apellidoPaterno || !codigoPostal || !calle || !numExt || !colonia || !ciudad || !nombreUsuario || !password || !sexo) {
+      alert('Por favor, completa todos los campos obligatorios.');
       return;
     }
 
-    // Aquí puedes agregar la lógica de registro: guardar en base de datos, etc.
+    const cliente = {
+      nombre,
+      apellidoPaterno,
+      apellidoMaterno,
+      rfc,
+      codigoPostal,
+      calle,
+      numExt,
+      numInt,
+      colonia,
+      ciudad,
+      nombreUsuario,
+      password,
+      sexo
+    };
 
-    // Mensaje de éxito
-    alert(`¡Registro exitoso!\nBienvenido, ${nombre} ${apellidos}`);
-    
-    // Redirige a otra página, por ejemplo, a la página de login o dashboard
+    this.registerService.registerCliente(cliente).subscribe(
+      (response) => {
+        alert(`¡Registro exitoso!\nBienvenido, ${nombre} ${apellidoPaterno}`);
+        this.router.navigate(['/inicio']);
+      },
+      (error) => {
+        console.error('Error en el registro:', error);
+        alert('Hubo un error en el registro. Por favor, intenta de nuevo.');
+      }
+    );
+  }
+
+  onCancel() {
     this.router.navigate(['/inicio']);
   }
 }
