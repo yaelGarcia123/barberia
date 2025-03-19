@@ -12,13 +12,14 @@ import { LogisticaComponent } from './logistica/logistica.component';
 import { ProductosComponent } from './productos/productos.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input'; 
+import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { AccountComponent } from './account/account.component';
 import { SaleComponent } from './sale/sale.component';
 import { RegisterComponent } from './register/register.component';
 import { AdmincomprasComponent } from './admincompras/admincompras.component';
 import { AdminventasComponent } from './adminventas/adminventas.component';
+import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AdminventasComponent } from './adminventas/adminventas.component';
     SaleComponent,
     RegisterComponent,
     AdmincomprasComponent,
-    AdminventasComponent
+    AdminventasComponent,
+    InicioadminComponent
   ],
   imports: [
     BrowserModule,
@@ -41,11 +43,11 @@ import { AdminventasComponent } from './adminventas/adminventas.component';
     BrowserAnimationsModule,
     AppRoutingModule,
     MatFormFieldModule, // Asegúrate de agregar este módulo
-    MatInputModule, 
+    MatInputModule,
     MatTableModule,
     HttpClientModule // 👈 Asegúrate de que esté aquí
 
-   
+
   ],
   providers: [
     provideAnimationsAsync()
