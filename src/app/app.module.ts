@@ -20,6 +20,7 @@ import { RegisterComponent } from './register/register.component';
 import { AdmincomprasComponent } from './admincompras/admincompras.component';
 import { AdminventasComponent } from './adminventas/adminventas.component';
 import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
+import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
     RegisterComponent,
     AdmincomprasComponent,
     AdminventasComponent,
-    InicioadminComponent
+    InicioadminComponent,
+    AdminusuariosComponent
   ],
   imports: [
     BrowserModule,

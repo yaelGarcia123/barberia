@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AccountService } from '../services/account.service'; // Asegúrate de que la ruta sea correcta
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css']
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
 
   perfil = {
     nombre: '',
@@ -22,44 +23,64 @@ export class AccountComponent {
     cvv: ''
   };
 
-  pedidosEnCurso = [
-    { id: 1, estado: 'En Proceso', fecha: '2025-03-10' },
-    { id: 2, estado: 'Enviado', fecha: '2025-03-12' }
-  ];
-
-  pedidosPasados = [
-    { id: 3, estado: 'Entregado', fecha: '2025-02-28' },
-    { id: 4, estado: 'Entregado', fecha: '2025-02-20' }
-  ];
+  pedidosEnCurso: any[] = [];
+  pedidosPasados: any[] = [];
+  ventas: any[] = [];
 
   pasosCompletados: string[] = [];
   pasosRestantes: string[] = [];
 
+  constructor(private accountService: AccountService) {}
+
+  ngOnInit() {
+    this.cargarDatosUsuario();
+    this.cargarPedidos();
+    this.cargarVentas();
+  }
+
+  cargarDatosUsuario() {
+    this.accountService.obtenerPerfil().subscribe(
+      (data) => {
+        this.perfil = data;
+      },
+      (error) => {
+        console.error('Error al cargar el perfil:', error);
+      }
+    );
+  }
+
+  cargarPedidos() {
+    this.accountService.obtenerPedidos().subscribe(
+      (data) => {
+        this.pedidosEnCurso = data.enCurso;
+        this.pedidosPasados = data.pasados;
+      },
+      (error) => {
+        console.error('Error al cargar los pedidos:', error);
+      }
+    );
+  }
+
+  cargarVentas() {
+    this.accountService.obtenerVentas().subscribe(
+      (data) => {
+        this.ventas = data;
+      },
+      (error) => {
+        console.error('Error al cargar las ventas:', error);
+      }
+    );
+  }
+
   abrirModal(pedidoId: number) {
-    // Lógica para asignar los pasos completos y restantes según el pedido
     if (pedidoId === 1) {
-      this.pasosCompletados = [
-        'Pedido realizado',
-        'Pago confirmado',
-        'Enviado a la bodega'
-      ];
-      this.pasosRestantes = [
-        'En camino',
-        'Entregado al cliente'
-      ];
+      this.pasosCompletados = ['Pedido realizado', 'Pago confirmado', 'Enviado a la bodega'];
+      this.pasosRestantes = ['En camino', 'Entregado al cliente'];
     } else if (pedidoId === 2) {
-      this.pasosCompletados = [
-        'Pedido realizado',
-        'Pago confirmado'
-      ];
-      this.pasosRestantes = [
-        'Enviado a la bodega',
-        'En camino',
-        'Entregado al cliente'
-      ];
+      this.pasosCompletados = ['Pedido realizado', 'Pago confirmado'];
+      this.pasosRestantes = ['Enviado a la bodega', 'En camino', 'Entregado al cliente'];
     }
-  
-    // Verifica que el elemento no sea null antes de crear el modal
+
     const modalElement = document.getElementById('modalEstado');
     if (modalElement) {
       const modal = new window.bootstrap.Modal(modalElement);
@@ -70,27 +91,41 @@ export class AccountComponent {
   }
 
   guardarDatos() {
-    // Lógica para guardar los datos personales
-    console.log('Datos guardados', this.perfil);
+    this.accountService.actualizarPerfil(this.perfil).subscribe(
+      () => console.log('Datos guardados exitosamente'),
+      (error) => console.error('Error al guardar los datos:', error)
+    );
   }
 
   guardarDireccion() {
-    // Lógica para guardar dirección
-    console.log('Dirección guardada', this.perfil.direccion);
+    this.accountService.actualizarDireccion(this.perfil.direccion).subscribe(
+      () => console.log('Dirección guardada exitosamente'),
+      (error) => console.error('Error al guardar la dirección:', error)
+    );
   }
 
   guardarEmpresa() {
-    // Lógica para guardar empresa
-    console.log('Empresa guardada', this.perfil);
+    this.accountService.actualizarEmpresa({
+      nombreEmpresa: this.perfil.nombreEmpresa,
+      ruc: this.perfil.ruc
+    }).subscribe(
+      () => console.log('Empresa guardada exitosamente'),
+      (error) => console.error('Error al guardar la empresa:', error)
+    );
   }
 
   guardarPago() {
-    // Lógica para guardar método de pago
-    console.log('Método de pago guardado', this.perfil);
+    this.accountService.actualizarPago({
+      tarjeta: this.perfil.tarjeta,
+      fechaExp: this.perfil.fechaExp,
+      cvv: this.perfil.cvv
+    }).subscribe(
+      () => console.log('Método de pago guardado exitosamente'),
+      (error) => console.error('Error al guardar el método de pago:', error)
+    );
   }
 
   verEstado(estado: string) {
-    // Lógica para ver más detalles sobre el estado del pedido
     console.log(`Estado del pedido: ${estado}`);
   }
 }

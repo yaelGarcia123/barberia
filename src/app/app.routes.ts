@@ -11,6 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { AdminventasComponent } from './adminventas/adminventas.component';
 import { AdmincomprasComponent } from './admincompras/admincompras.component';
 import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
+import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
 export const routes: Routes = [
 
 
@@ -29,7 +30,8 @@ export const routes: Routes = [
     { path:'register', component: RegisterComponent},
     { path:'adminventas', component: AdminventasComponent},
     { path:'admincompras', component:AdmincomprasComponent},
-    { path: 'inicioadmin', component: InicioadminComponent}
+    { path: 'inicioadmin', component: InicioadminComponent},
+    { path: 'adminusuarios', component: AdminusuariosComponent}
 
 
 

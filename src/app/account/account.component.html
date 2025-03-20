@@ -1,26 +1,34 @@
 <div class="container my-5">
   <h2 class="mb-4 text-center">Mi Perfil</h2>
 
-  <!-- Navegación de pestañas -->
   <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab">Datos Personales</button>
+      <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab">
+        Datos Personales
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="direccion-tab" data-bs-toggle="tab" data-bs-target="#direccion" type="button" role="tab">Dirección</button>
+      <button class="nav-link" id="direccion-tab" data-bs-toggle="tab" data-bs-target="#direccion" type="button" role="tab">
+        Dirección
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="empresa-tab" data-bs-toggle="tab" data-bs-target="#empresa" type="button" role="tab">Empresa</button>
+      <button class="nav-link" id="empresa-tab" data-bs-toggle="tab" data-bs-target="#empresa" type="button" role="tab">
+        Empresa
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="pago-tab" data-bs-toggle="tab" data-bs-target="#pago" type="button" role="tab">Método de Pago</button>
+      <button class="nav-link" id="pago-tab" data-bs-toggle="tab" data-bs-target="#pago" type="button" role="tab">
+        Método de Pago
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" data-bs-target="#pedidos" type="button" role="tab">Pedidos</button>
+      <button class="nav-link" id="ventas-tab" data-bs-toggle="tab" data-bs-target="#ventas" type="button" role="tab">
+        Mis Ventas
+      </button>
     </li>
   </ul>
 
-  <!-- Contenido de pestañas -->
   <div class="tab-content" id="profileTabsContent">
     <!-- Datos Personales -->
     <div class="tab-pane fade show active" id="datos" role="tabpanel">
@@ -35,9 +43,11 @@
             <input type="email" id="email" class="form-control" [(ngModel)]="perfil.email" name="email" required>
           </div>
         </div>
-        <div class="mb-3">
-          <label for="telefono" class="form-label">Teléfono</label>
-          <input type="text" id="telefono" class="form-control" [(ngModel)]="perfil.telefono" name="telefono">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" id="telefono" class="form-control" [(ngModel)]="perfil.telefono" name="telefono">
+          </div>
         </div>
         <button class="btn btn-primary">Guardar Cambios</button>
       </form>
@@ -48,7 +58,7 @@
       <form (ngSubmit)="guardarDireccion()">
         <div class="mb-3">
           <label for="direccion" class="form-label">Dirección</label>
-          <input type="text" id="direccion" class="form-control" [(ngModel)]="perfil.direccion" name="direccion" required>
+          <input type="text" id="direccion" class="form-control" [(ngModel)]="perfil.direccion" name="direccion">
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
@@ -67,20 +77,17 @@
     <!-- Empresa -->
     <div class="tab-pane fade" id="empresa" role="tabpanel">
       <form (ngSubmit)="guardarEmpresa()">
-        <div class="mb-3">
-          <label for="esEmpresa" class="form-label">¿Eres empresa?</label>
-          <select id="esEmpresa" class="form-select" [(ngModel)]="perfil.esEmpresa" name="esEmpresa">
-            <option [value]="false">No</option>
-            <option [value]="true">Sí</option>
-          </select>
+        <div class="mb-3 form-check">
+          <input type="checkbox" id="esEmpresa" class="form-check-input" [(ngModel)]="perfil.esEmpresa" name="esEmpresa">
+          <label class="form-check-label" for="esEmpresa">Soy una empresa</label>
         </div>
-        <div *ngIf="perfil.esEmpresa">
-          <div class="mb-3">
-            <label for="nombreEmpresa" class="form-label">Nombre de Empresa</label>
+        <div class="row mb-3" *ngIf="perfil.esEmpresa">
+          <div class="col-md-6">
+            <label for="nombreEmpresa" class="form-label">Nombre de la Empresa</label>
             <input type="text" id="nombreEmpresa" class="form-control" [(ngModel)]="perfil.nombreEmpresa" name="nombreEmpresa">
           </div>
-          <div class="mb-3">
-            <label for="ruc" class="form-label">RUC / NIT</label>
+          <div class="col-md-6">
+            <label for="ruc" class="form-label">RUC</label>
             <input type="text" id="ruc" class="form-control" [(ngModel)]="perfil.ruc" name="ruc">
           </div>
         </div>
@@ -91,76 +98,45 @@
     <!-- Método de Pago -->
     <div class="tab-pane fade" id="pago" role="tabpanel">
       <form (ngSubmit)="guardarPago()">
-        <div class="mb-3">
-          <label for="tarjeta" class="form-label">Número de Tarjeta</label>
-          <input type="text" id="tarjeta" class="form-control" maxlength="16" [(ngModel)]="perfil.tarjeta" name="tarjeta" placeholder="1234 5678 9012 3456" required>
-        </div>
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="fechaExp" class="form-label">Fecha Expiración</label>
-            <input type="text" id="fechaExp" class="form-control" [(ngModel)]="perfil.fechaExp" name="fechaExp" placeholder="MM/AA" required>
+            <label for="tarjeta" class="form-label">Número de Tarjeta</label>
+            <input type="text" id="tarjeta" class="form-control" [(ngModel)]="perfil.tarjeta" name="tarjeta">
           </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
+            <label for="fechaExp" class="form-label">Fecha Expiración</label>
+            <input type="text" id="fechaExp" class="form-control" [(ngModel)]="perfil.fechaExp" name="fechaExp">
+          </div>
+          <div class="col-md-3">
             <label for="cvv" class="form-label">CVV</label>
-            <input type="text" id="cvv" class="form-control" maxlength="4" [(ngModel)]="perfil.cvv" name="cvv" required>
+            <input type="text" id="cvv" class="form-control" [(ngModel)]="perfil.cvv" name="cvv">
           </div>
         </div>
-        <button class="btn btn-success">Guardar Método de Pago</button>
+        <button class="btn btn-primary">Guardar Método de Pago</button>
       </form>
     </div>
 
-    <!-- Pedidos -->
-    <div class="tab-pane fade" id="pedidos" role="tabpanel">
-      <h4 class="mb-4">Pedidos en Curso</h4>
-      <ul class="list-group mb-3">
-        <li class="list-group-item">
-          <h5>Pedido #1</h5>
-          <p>Estado: Enviado a la Bodega</p>
-          <button class="btn btn-info btn-sm" (click)="abrirModal(1)">Ver estado</button>
-        </li>
-        <li class="list-group-item">
-          <h5>Pedido #2</h5>
-          <p>Estado: Pago confirmado</p>
-          <button class="btn btn-info btn-sm" (click)="abrirModal(2)">Ver estado</button>
-        </li>
-      </ul>
-
-      <h4 class="mb-4">Pedidos Pasados</h4>
-      <ul class="list-group">
-        <li class="list-group-item">
-          <h5>Pedido #3</h5>
-          <p>Estado: Entregado</p>
-        </li>
-        <li class="list-group-item">
-          <h5>Pedido #4</h5>
-          <p>Estado: Entregado</p>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- Modal de Estado -->
-<div class="modal fade" id="modalEstado" tabindex="-1" aria-labelledby="modalEstadoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalEstadoLabel">Estado del Pedido</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h5>Pasos Completados:</h5>
-        <ul>
-          <li *ngFor="let paso of pasosCompletados">{{ paso }}</li>
-        </ul>
-        <h5>Pasos Restantes:</h5>
-        <ul>
-          <li *ngFor="let paso of pasosRestantes">{{ paso }}</li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+    <!-- Historial de Ventas -->
+    <div class="tab-pane fade" id="ventas" role="tabpanel">
+      <h4 class="mb-3">Historial de Ventas</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID Venta</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventas">
+            <td>{{ venta.venta_id }}</td>
+            <td>{{ venta.fecha_venta | date:'short' }}</td>
+            <td>{{ venta.precio_total | currency }}</td>
+            <td><button class="btn btn-info">Ver</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
