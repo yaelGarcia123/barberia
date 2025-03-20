@@ -1,63 +1,96 @@
 <div class="container">
-    <h2 class="text-center">Gestión de Inventario</h2>
-  
-    <button class="btn btn-custom mb-3" (click)="openModal()">Agregar Producto</button>
-  
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of products">
-          <td>{{ product.id }}</td>
-          <td>{{ product.nombre }}</td>
-          <td>{{ product.precio | currency }}</td>
-          <td>{{ product.existencia }}</td>
-          <td>
-            <button class="btn btn-warning btn-sm" (click)="openModal(product)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <!-- Modal para agregar o editar productos -->
-    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addProductModalLabel">{{ isEdit ? 'Editar Producto' : 'Agregar Producto' }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form #productForm="ngForm">
-              <input type="hidden" [(ngModel)]="selectedProduct.id" name="id">
-              <div class="mb-3">
-                <label for="productName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" [(ngModel)]="selectedProduct.nombre" name="nombre" required>
-              </div>
-              <div class="mb-3">
-                <label for="productPrice" class="form-label">Precio</label>
-                <input type="number" class="form-control" [(ngModel)]="selectedProduct.precio" name="precio" required>
-              </div>
-              <div class="mb-3">
-                <label for="productQuantity" class="form-label">Cantidad</label>
-                <input type="number" class="form-control" [(ngModel)]="selectedProduct.existencia" name="existencia" required>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-custom" (click)="saveProduct()">Guardar</button>
-          </div>
+  <h2 class="text-center">Gestión de Inventario</h2>
+
+  <button class="btn btn-custom mb-3" (click)="openModal()">Agregar Producto</button>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Categoría</th>
+        <th>Costo</th>
+        <th>Precio</th>
+        <th>Impuesto</th>
+        <th>Existencia</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.id }}</td>
+        <td>{{ product.nombre }}</td>
+        <td>{{ product.descripcion }}</td>
+        <td>{{ product.categoria }}</td>
+        <td>{{ product.costo | currency }}</td>
+        <td>{{ product.precio | currency }}</td>
+        <td>{{ product.impuesto }}%</td>
+        <td>{{ product.existencia }}</td>
+        <td>{{ product.status ? 'Activo' : 'Inactivo' }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm" (click)="openModal(product)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal para agregar o editar productos -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">{{ isEdit ? 'Editar Producto' : 'Agregar Producto' }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #productForm="ngForm">
+            <input type="hidden" [(ngModel)]="selectedProduct.id" name="id">
+            
+            <div class="mb-3">
+              <label for="productName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedProduct.nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+              <label for="productDescription" class="form-label">Descripción</label>
+              <textarea class="form-control" [(ngModel)]="selectedProduct.descripcion" name="descripcion" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="productCategory" class="form-label">Categoría</label>
+              <input type="text" class="form-control" [(ngModel)]="selectedProduct.categoria" name="categoria" required>
+            </div>
+            <div class="mb-3">
+              <label for="productCost" class="form-label">Costo</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedProduct.costo" name="costo" required>
+            </div>
+            <div class="mb-3">
+              <label for="productPrice" class="form-label">Precio</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedProduct.precio" name="precio" required>
+            </div>
+            <div class="mb-3">
+              <label for="productTax" class="form-label">Impuesto (%)</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedProduct.impuesto" name="impuesto" required>
+            </div>
+            <div class="mb-3">
+              <label for="productQuantity" class="form-label">Existencia</label>
+              <input type="number" class="form-control" [(ngModel)]="selectedProduct.existencia" name="existencia" required>
+            </div>
+            <div class="mb-3">
+              <label for="productStatus" class="form-label">Estado</label>
+              <select class="form-control" [(ngModel)]="selectedProduct.status" name="status" required>
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Cerrar</button>
+          <button type="button" class="btn btn-custom" (click)="saveProduct()">Guardar</button>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

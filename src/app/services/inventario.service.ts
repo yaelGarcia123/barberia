@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class InventarioService {
 
-  private apiUrl = 'http://tu-api-url/api/productos'; // Cambia esto a tu URL de la API
+  private apiUrl = 'https://localhost:7227/api/Productos'; // Cambia esto a tu URL de la API
 
   constructor(private http: HttpClient) { }
 

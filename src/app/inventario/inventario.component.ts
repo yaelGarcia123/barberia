@@ -7,9 +7,19 @@ import * as bootstrap from 'bootstrap';
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.css']
 })
-export class InventarioComponent {
+export class InventarioComponent implements OnInit {
   products: any[] = [];
-  selectedProduct: any = {};
+  selectedProduct: any = {
+    id: null,
+    nombre: '',
+    descripcion: '',
+    categoria: '',
+    costo: 0,
+    precio: 0,
+    impuesto: 0,
+    existencia: 0,
+    status: true
+  };
   isEdit: boolean = false;
 
   constructor(private inventoryService: InventarioService) {}
@@ -31,10 +41,20 @@ export class InventarioComponent {
       this.selectedProduct = { ...product };
       this.isEdit = true;
     } else {
-      this.selectedProduct = {};
+      this.selectedProduct = {
+        id: null,
+        nombre: '',
+        descripcion: '',
+        categoria: '',
+        costo: 0,
+        precio: 0,
+        impuesto: 0,
+        existencia: 0,
+        status: true
+      };
       this.isEdit = false;
     }
-    
+
     // Verificar que el modal existe antes de crear la instancia
     const modalElement = document.getElementById('addProductModal');
     if (modalElement) {
@@ -56,6 +76,8 @@ export class InventarioComponent {
         this.closeModal();
       });
     }
+
+
   }
 
   // Eliminar producto
