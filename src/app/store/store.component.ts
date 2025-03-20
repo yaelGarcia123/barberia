@@ -12,7 +12,7 @@ interface Product {
   impuesto: number;
   existencia: number;
   status: boolean;
-  image: string;
+ 
 }
 
 interface CartItem {
@@ -107,7 +107,7 @@ export class StoreComponent implements OnInit {
       alert('El carrito está vacío.');
       return;
     }
-    this.router.navigate(['/Sale'], { state: { cart: this.cart, total: this.getTotal() } });
+    this.router.navigate(['/sale'], { state: { cart: this.cart, total: this.getTotal() } });
     this.clearCart();
   }
 
