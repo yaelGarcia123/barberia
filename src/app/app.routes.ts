@@ -27,8 +27,8 @@ export const routes: Routes = [
     { path: 'account', component: AccountComponent},
     { path:'sale', component: SaleComponent},
     { path:'register', component: RegisterComponent},
-    { path:'adminVentas', component: AdminventasComponent},
-    { path:'adminCompras', component:AdmincomprasComponent},
+    { path:'adminventas', component: AdminventasComponent},
+    { path:'admincompras', component:AdmincomprasComponent},
     { path: 'inicioadmin', component: InicioadminComponent}
 
 

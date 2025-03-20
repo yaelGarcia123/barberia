@@ -1,0 +1,199 @@
+CREATE DATABASE Barbercys;
+GO
+
+USE Barbercys;
+GO
+
+-- Tabla de almacenes donde se guardan los productos
+CREATE TABLE Almacen (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    direccion VARCHAR(255),
+    ciudad VARCHAR(100),
+    estado VARCHAR(100),
+    codigo_postal VARCHAR(10)
+);
+
+-- Tabla de productos disponibles para la venta
+CREATE TABLE Producto (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    categoria VARCHAR(100),
+    costo DECIMAL(10,2),
+    precio DECIMAL(10,2),
+    impuesto DECIMAL(4,2),
+    existencia INT,
+    status BIT
+);
+
+-- Inventario de productos en los almacenes
+CREATE TABLE Inventario (
+    inventario_id INT PRIMARY KEY IDENTITY(1,1),
+    almacen_id INT,
+    producto_id INT,
+    cantidad INT,
+    fecha_actualizacion DATETIME,
+    FOREIGN KEY (almacen_id) REFERENCES Almacen(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE
+);
+
+-- Información de los clientes
+CREATE TABLE Cliente (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    apellido_paterno VARCHAR(100),
+    apellido_materno VARCHAR(100),
+    rfc VARCHAR(13),
+    codigo_postal VARCHAR(10),
+    calle VARCHAR(100),
+    num_ext VARCHAR(10),
+    num_int VARCHAR(10),
+    colonia VARCHAR(100),
+    ciudad VARCHAR(100),
+    nombre_usuario VARCHAR(50) UNIQUE,
+    password VARCHAR(255),
+    sexo CHAR(1) CHECK (sexo IN ('M', 'F'))
+);
+
+-- Métodos de pago disponibles
+CREATE TABLE MetodoPago (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(50) NOT NULL
+);
+
+-- Estado de la venta (pendiente, pagado, cancelado, etc.)
+CREATE TABLE EstadoVenta (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre_estado VARCHAR(50) NOT NULL
+);
+
+-- Registro de ventas
+CREATE TABLE Ventas (
+    venta_id INT PRIMARY KEY IDENTITY(1,1),
+    cliente_id INT,
+    estado_venta_id INT,
+    precio_total DECIMAL(10,2),
+    fecha_venta DATETIME,
+    almacen_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id) ON DELETE CASCADE,
+    FOREIGN KEY (estado_venta_id) REFERENCES EstadoVenta(id) ON DELETE SET NULL,
+    FOREIGN KEY (almacen_id) REFERENCES Almacen(id) ON DELETE CASCADE
+);
+
+-- Detalle de los productos vendidos en cada venta
+CREATE TABLE DetalleVenta (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    venta_id INT,
+    producto_id INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10,2),
+    subtotal DECIMAL(10,2),
+    FOREIGN KEY (venta_id) REFERENCES Ventas(venta_id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE
+);
+
+-- Logística y seguimiento del envío de productos con estados predefinidos
+CREATE TABLE Logistica (
+    logistica_id INT PRIMARY KEY IDENTITY(1,1),
+    venta_id INT,
+    tipo_envio VARCHAR(50),
+    empresa_transporte VARCHAR(100),
+    estado_envio VARCHAR(50)
+        CHECK (estado_envio IN ('Pendiente', 'Preparando', 'En camino', 'Entregado', 'Cancelado')),
+    fecha_entrega_estimada DATETIME,
+    FOREIGN KEY (venta_id) REFERENCES Ventas(venta_id) ON DELETE CASCADE
+);
+
+-- Información de los proveedores
+CREATE TABLE Proveedor (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    tipo VARCHAR(50), -- Persona o Empresa
+    rfc VARCHAR(13),
+    codigo_postal VARCHAR(10),
+    calle VARCHAR(100),
+    num_ext VARCHAR(10),
+    num_int VARCHAR(10),
+    colonia VARCHAR(100),
+    ciudad VARCHAR(100)
+);
+
+-- Registro de compras de productos a proveedores
+CREATE TABLE Compras (
+    compra_id INT PRIMARY KEY IDENTITY(1,1),
+    proveedor_id INT,
+    precio_total DECIMAL(10,2),
+    fecha_compra DATETIME,
+    almacen_id INT,
+    estado_compra VARCHAR(50),
+    FOREIGN KEY (proveedor_id) REFERENCES Proveedor(id) ON DELETE CASCADE,
+    FOREIGN KEY (almacen_id) REFERENCES Almacen(id) ON DELETE CASCADE
+);
+
+-- Detalle de los productos comprados en cada compra
+CREATE TABLE DetalleCompra (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    compra_id INT,
+    producto_id INT,
+    cantidad INT,
+    precio_unitario DECIMAL(10,2),
+    subtotal DECIMAL(10,2),
+    FOREIGN KEY (compra_id) REFERENCES Compras(compra_id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE
+);
+
+-- Información de los administradores del sistema
+CREATE TABLE Administrador (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    apellido_paterno VARCHAR(100),
+    apellido_materno VARCHAR(100),
+    nombre_usuario VARCHAR(50) UNIQUE,
+    password VARCHAR(255)
+);
+
+-- Registro de empleados si se maneja personal adicional
+CREATE TABLE Empleado (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    apellido_paterno VARCHAR(100),
+    apellido_materno VARCHAR(100),
+    puesto VARCHAR(50),
+    salario DECIMAL(10,2),
+    fecha_contratacion DATE
+);
+
+-- Bitácora de movimientos en la base de datos
+CREATE TABLE Bitacora (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    tabla_afectada VARCHAR(100),
+    id_registro_afectado INT,
+    tipo_movimiento VARCHAR(50), -- INSERT, UPDATE, DELETE
+    usuario VARCHAR(100),
+    fecha_movimiento DATETIME DEFAULT GETDATE(),
+    detalle TEXT
+);
+
+-- Información de los repartidores
+CREATE TABLE Repartidor (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    nombre VARCHAR(100),
+    apellido_paterno VARCHAR(100),
+    apellido_materno VARCHAR(100),
+    telefono VARCHAR(15),
+    email VARCHAR(100),
+    licencia_conducir VARCHAR(50),
+    fecha_contratacion DATE,
+    status BIT DEFAULT 1 -- Activo/Inactivo
+);
+
+-- Relación entre repartidores y envíos (muchos a muchos)
+CREATE TABLE EnvioRepartidor (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    repartidor_id INT,
+    logistica_id INT,
+    fecha_asignacion DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (repartidor_id) REFERENCES Repartidor(id) ON DELETE CASCADE,
+    FOREIGN KEY (logistica_id) REFERENCES Logistica(logistica_id) ON DELETE CASCADE
+);
