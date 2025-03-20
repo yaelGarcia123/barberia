@@ -16,12 +16,14 @@ export class InicioComponent {
   onSubmit(): void {
     this.authService.login(this.username, this.password).subscribe(
       (response) => {
-        localStorage.setItem('token', response.token); // Asume que el backend devuelve un token
-        this.router.navigate(['/store']); // Redirige al dashboard o a la página principal
+        console.log('Respuesta del servidor:', response); // Verificar la respuesta
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['/store']);
       },
       (error) => {
         console.error('Error en el inicio de sesión', error);
-        alert('Usuario o contraseña incorrectos');
+        console.error('Detalles del error:', error.error); // Muestra el cuerpo de la respuesta del servidor
+        alert('Error en el inicio de sesión. Por favor, intenta de nuevo.');
       }
     );
   }
