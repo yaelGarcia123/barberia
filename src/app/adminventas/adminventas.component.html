@@ -1,1 +1,42 @@
-<p>adminventas works!</p>
+<h2>Ventas</h2>
+<div *ngFor="let venta of ventas" class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-200">
+    <h2>Ventas</h2>
+    <div class="flex justify-between items-center mb-4">
+        
+      <div>
+        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+          <i class="fas fa-receipt mr-2 text-blue-500"></i> Venta #{{ venta.venta_id }}
+        </h3>
+        <p class="text-sm text-gray-500 mt-1">
+          <i class="far fa-calendar-alt mr-1"></i> {{ venta.fecha_venta | date:'short' }}
+        </p>
+      </div>
+      <div>
+        <button (click)="venta.mostrarDetalles = !venta.mostrarDetalles"
+          class="text-sm text-white bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-lg shadow transition">
+          {{ venta.mostrarDetalles ? 'Ocultar Detalles' : 'Ver Detalles' }}
+        </button>
+      </div>
+    </div>
+  
+    <div class="text-gray-700 space-y-1 mb-4">
+      <p><span class="font-medium">Cliente ID:</span> {{ venta.cliente_id }}</p>
+      <p><span class="font-medium">Total:</span> {{ venta.precio_total | currency }}</p>
+    </div>
+  
+    <div *ngIf="venta.mostrarDetalles && venta.detalles?.length" class="bg-gray-50 p-4 rounded-lg mt-4">
+      <h4 class="text-lg font-semibold text-gray-700 mb-2">
+        <i class="fas fa-boxes mr-1 text-green-500"></i> Detalles:
+      </h4>
+      <ul class="divide-y divide-gray-200">
+        <li *ngFor="let detalle of venta.detalles" class="py-2 text-sm text-gray-600">
+          <i class="fas fa-cube mr-1 text-gray-400"></i>
+          <span class="font-medium text-gray-800">Producto:</span> {{ detalle.producto_id }},
+          <span class="font-medium text-gray-800">Cantidad:</span> {{ detalle.cantidad }},
+          <span class="font-medium text-gray-800">Precio:</span> {{ detalle.precio_unitario | currency }},
+          <span class="font-medium text-gray-800">Subtotal:</span> {{ detalle.subtotal | currency }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

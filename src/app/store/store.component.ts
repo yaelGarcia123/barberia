@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductService } from '../services/product.service'; // Importar el servicio
+import { ProductService } from '../services/product.service';
+import { AuthService } from '../auth.service'; // ✅ Correcto
+
 
 interface Product {
   id: number;
@@ -20,7 +22,7 @@ interface CartItem {
   nombre: string;
   precio: number;
   cantidad: number;
-  total: number; // Precio total con impuesto
+  total: number;
 }
 
 @Component({
@@ -32,22 +34,32 @@ export class StoreComponent implements OnInit {
   products: Product[] = [];
   cart: CartItem[] = [];
   cartVisible: boolean = false;
+  userName: string = '';  // ✅ Mostrar nombre de usuario
 
-  constructor(private router: Router, private productService: ProductService) {}
+  constructor(
+    private router: Router,
+    private productService: ProductService,
+    private authService: AuthService  // ✅ Inyectar AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.userName = this.authService.getUserName() || '';  // ✅ Obtener nombre del usuario
+    this.loadProducts();  // ✅ Cargar productos
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 
   loadProducts(): void {
     this.productService.getProductos().subscribe(
       (data: Product[]) => {
         this.products = data
-          .filter(product => product.status) // Mostrar solo productos activos
+          .filter(product => product.status)
           .map(product => ({
             ...product,
-            precio: parseFloat(product.precio.toFixed(2)), // Asegurar formato de precio
-            impuesto: parseFloat(product.impuesto.toFixed(2)) // Asegurar formato de impuesto
+            precio: parseFloat(product.precio.toFixed(2)),
+            impuesto: parseFloat(product.impuesto.toFixed(2))
           }));
       },
       (error) => {
@@ -91,7 +103,7 @@ export class StoreComponent implements OnInit {
       });
     }
 
-    quantityInput.value = '1'; // Reiniciar input
+    quantityInput.value = '1';
   }
 
   removeFromCart(id: number): void {

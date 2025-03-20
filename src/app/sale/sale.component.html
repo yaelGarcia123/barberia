@@ -1,99 +1,101 @@
 <div class="container mt-5">
-    <h2 class="mb-4">Confirmar Compra</h2>
-  
-    <!-- Lista de productos en el carrito -->
+  <h2 class="mb-4">Confirmar Compra</h2>
+
+  <!-- Lista de productos en el carrito -->
+  <div class="mb-4">
+    <h4>Productos:</h4>
+    <ul class="list-group">
+      <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between">
+        <div>
+          {{ item.name }} (x{{ item.quantity }})
+          <br>
+          <small class="text-muted">$ {{ item.price.toFixed(2) }} c/u</small>
+        </div>
+        <strong>$ {{ (item.price * item.quantity).toFixed(2) }}</strong>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Detalles de la compra -->
+  <form (ngSubmit)="confirmPurchase()" #purchaseForm="ngForm">
+    <div class="mb-3">
+      <label class="form-label">Fecha de compra:</label>
+      <input type="text" class="form-control" [value]="purchaseDate | date:'shortDate'" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Fecha de entrega:</label>
+      <input type="text" class="form-control" [value]="deliveryDate | date:'shortDate'" readonly>
+      <small class="form-text text-muted">
+        * Si la dirección está fuera de la ciudad, la entrega será entre 7-10 días hábiles.
+      </small>
+    </div>
+
+    <!-- Método de pago -->
+    <div class="mb-3">
+      <label for="paymentMethod" class="form-label">Método de pago:</label>
+      <select id="paymentMethod" class="form-select" [(ngModel)]="paymentMethod" name="paymentMethod" required>
+        <option value="" disabled selected>Selecciona un método</option>
+        <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+        <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+        <option value="PayPal">PayPal</option>
+        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+      </select>
+    </div>
+
+    <!-- Detalles tarjeta -->
+    <div *ngIf="paymentMethod === 'Tarjeta de Crédito' || paymentMethod === 'Tarjeta de Débito'" class="mb-3 border p-3 rounded bg-light">
+      <h5>Detalles de la Tarjeta</h5>
+      <div class="mb-2">
+        <label for="cardNumber" class="form-label">Número de Tarjeta:</label>
+        <input type="text" id="cardNumber" class="form-control" [(ngModel)]="cardDetails.number" name="cardNumber" maxlength="16" required>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <label for="cardExpiry" class="form-label">Fecha de Vencimiento:</label>
+          <input type="text" id="cardExpiry" class="form-control" [(ngModel)]="cardDetails.expiry" name="cardExpiry" placeholder="MM/AA" required>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="cardCVV" class="form-label">CVV:</label>
+          <input type="text" id="cardCVV" class="form-control" [(ngModel)]="cardDetails.cvv" name="cardCVV" maxlength="4" required>
+        </div>
+      </div>
+      <div class="mb-2">
+        <label for="cardName" class="form-label">Nombre del Titular:</label>
+        <input type="text" id="cardName" class="form-control" [(ngModel)]="cardDetails.name" name="cardName" required>
+      </div>
+    </div>
+
+    <!-- Dirección -->
+    <div class="mb-3">
+      <label for="address" class="form-label">Dirección de entrega:</label>
+      <textarea id="address" class="form-control" [(ngModel)]="address" name="address" rows="3" required></textarea>
+    </div>
+
+    <!-- Total -->
     <div class="mb-4">
-      <h4>Productos:</h4>
-      <ul class="list-group">
-        <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between">
-          <div>
-            {{ item.name }} (x{{ item.quantity }})
-            <br>
-            <small class="text-muted">$ {{ item.price.toFixed(2) }} c/u</small>
-          </div>
-          <strong>$ {{ (item.price * item.quantity).toFixed(2) }}</strong>
-        </li>
-      </ul>
+      <h5>Total a pagar: ${{ total.toFixed(2) }}</h5>
     </div>
-  
-    <!-- Detalles de la compra -->
-    <form (ngSubmit)="confirmPurchase()" #purchaseForm="ngForm">
-      <div class="mb-3">
-        <label class="form-label">Fecha de compra:</label>
-        <input type="text" class="form-control" [value]="purchaseDate | date:'shortDate'" readonly>
+
+    <button type="submit" class="btn btn-success" [disabled]="!purchaseForm.form.valid">Confirmar Compra</button>
+  </form>
+</div>
+
+<!-- Modal de confirmación -->
+<div #confirmationModal class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Compra Confirmada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-  
-      <div class="mb-3">
-        <label for="deliveryDate" class="form-label">Fecha de entrega:</label>
-        <input type="date" id="deliveryDate" class="form-control" [(ngModel)]="deliveryDate" name="deliveryDate" required>
+      <div class="modal-body">
+        <p>Tu pedido llegará el <strong>{{ deliveryDate | date:'longDate' }}</strong>.</p>
+        <p>Puedes ver el estado de tu pedido en el apartado <strong>Cuenta</strong>.</p>
       </div>
-  
-      <!-- Método de pago -->
-      <div class="mb-3">
-        <label for="paymentMethod" class="form-label">Método de pago:</label>
-        <select id="paymentMethod" class="form-select" [(ngModel)]="paymentMethod" name="paymentMethod" required>
-          <option value="" disabled selected>Selecciona un método</option>
-          <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
-          <option value="Tarjeta de Débito">Tarjeta de Débito</option>
-          <option value="PayPal">PayPal</option>
-          <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-        </select>
-      </div>
-  
-      <!-- Campos para tarjeta de crédito/débito -->
-      <div *ngIf="paymentMethod === 'Tarjeta de Crédito' || paymentMethod === 'Tarjeta de Débito'" class="mb-3 border p-3 rounded bg-light">
-        <h5>Detalles de la Tarjeta</h5>
-        <div class="mb-2">
-          <label for="cardNumber" class="form-label">Número de Tarjeta:</label>
-          <input type="text" id="cardNumber" class="form-control" [(ngModel)]="cardDetails.number" name="cardNumber" maxlength="16" required>
-        </div>
-        <div class="row">
-          <div class="col-md-6 mb-2">
-            <label for="cardExpiry" class="form-label">Fecha de Vencimiento:</label>
-            <input type="text" id="cardExpiry" class="form-control" [(ngModel)]="cardDetails.expiry" name="cardExpiry" placeholder="MM/AA" required>
-          </div>
-          <div class="col-md-6 mb-2">
-            <label for="cardCVV" class="form-label">CVV:</label>
-            <input type="text" id="cardCVV" class="form-control" [(ngModel)]="cardDetails.cvv" name="cardCVV" maxlength="4" required>
-          </div>
-        </div>
-        <div class="mb-2">
-          <label for="cardName" class="form-label">Nombre del Titular:</label>
-          <input type="text" id="cardName" class="form-control" [(ngModel)]="cardDetails.name" name="cardName" required>
-        </div>
-      </div>
-  
-      <!-- Dirección -->
-      <div class="mb-3">
-        <label for="address" class="form-label">Dirección de entrega:</label>
-        <textarea id="address" class="form-control" [(ngModel)]="address" name="address" rows="3" required></textarea>
-      </div>
-  
-      <!-- Total -->
-      <div class="mb-4">
-        <h5>Total a pagar: ${{ total.toFixed(2) }}</h5>
-      </div>
-  
-      <button type="submit" class="btn btn-success" [disabled]="!purchaseForm.form.valid">Confirmar Compra</button>
-    </form>
-  </div>
-  
-  <!-- Modal de confirmación -->
-  <div #confirmationModal class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmationModalLabel">Compra Confirmada</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <p>Tu pedido llegara el <strong>{{ deliveryDate | date:'longDate' }}</strong>.</p>
-          <p>Puedes ver el estado de tu pedido en el apartado <strong>Cuenta</strong>.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
-  
+</div>
