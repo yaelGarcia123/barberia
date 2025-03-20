@@ -34,7 +34,7 @@ export class StoreComponent implements OnInit {
   products: Product[] = [];
   cart: CartItem[] = [];
   cartVisible: boolean = false;
-  userName: string = '';  // ✅ Mostrar nombre de usuario
+  NombreUsuario: string = '';  // ✅ Mostrar nombre de usuario
 
   constructor(
     private router: Router,
@@ -43,7 +43,7 @@ export class StoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.authService.getUserName() || '';  // ✅ Obtener nombre del usuario
+    this.NombreUsuario = this.authService.getUserName() || '';  // ✅ Obtener nombre del usuario
     this.loadProducts();  // ✅ Cargar productos
   }
 

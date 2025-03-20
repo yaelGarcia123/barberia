@@ -28,7 +28,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      return decodedToken.username || decodedToken.name || null;  // Ajusta según cómo venga el nombre
+      return decodedToken.NombreUsuario || decodedToken.Nombre || null;  // Ajusta según cómo venga el nombre
     }
     return null;
   }
