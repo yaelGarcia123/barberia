@@ -1,5 +1,4 @@
 <!-- Navbar -->
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 py-4">
   <a class="navbar-brand" href="#">
     <img src="../../assets/img/LogoBarberia.jpg" alt="logo" width="60" class="d-inline-block align-middle">
@@ -12,14 +11,12 @@
     <ul class="navbar-nav">
       <!-- 👇 Mostrar nombre del usuario -->
       <li class="nav-item">
-        <a class="nav-link fs-4" href="#">Hola, {{ userName }}</a>
+        <a class="nav-link fs-4" href="#">Hola, {{ NombreUsuario }}</a>
       </li>
-
       <li class="nav-item"><a class="nav-link fs-4" routerLink="/account">Cuenta</a></li>
       <li class="nav-item"><a class="nav-link fs-4" href="#">Catálogo</a></li>
       <li class="nav-item"><a class="nav-link fs-4" href="#">Ofertas</a></li>
       <li class="nav-item"><a class="nav-link fs-4" href="#">Contacto</a></li>
-
       <!-- 🛒 Carrito -->
       <li class="nav-item">
         <a href="#" class="nav-link fs-4 position-relative" (click)="toggleCartVisibility($event)">
@@ -27,7 +24,6 @@
           <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">{{ cart.length }}</span>
         </a>
       </li>
-
       <!-- 🔒 Cerrar sesión -->
       <li class="nav-item">
         <a class="nav-link fs-4" href="#" (click)="logout()">Cerrar sesión</a>
@@ -36,14 +32,12 @@
   </div>
 </nav>
 
-
 <!-- Catálogo -->
 <div class="container mt-5">
   <h2 class="text-center mb-4 fs-2">Catálogo de Productos</h2>
   <div class="row">
     <div class="col-md-3 mb-4" *ngFor="let product of products">
       <div class="card h-100 shadow-lg rounded-lg border-0" *ngIf="product.status">
-        <img [src]="product.image" class="card-img-top rounded-top" [alt]="product.nombre">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-center">{{ product.nombre }}</h5>
           <p class="text-muted text-center">{{ product.descripcion }}</p>
@@ -71,14 +65,51 @@
     <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between align-items-center">
       <div>
         <strong>{{ item.nombre }}</strong> (x{{ item.cantidad }})<br>
-<small class="text-muted">$ {{ item.precio.toFixed(2) }} c/u</small>
+        <small class="text-muted">$ {{ item.precio.toFixed(2) }} c/u</small>
       </div>
       <button class="btn btn-sm btn-danger" (click)="removeFromCart(item.id)">X</button>
     </li>
   </ul>
   <div class="d-flex justify-content-between mt-3">
     <strong>Total: ${{ getTotal().toFixed(2) }}</strong>
-    <button class="btn btn-primary btn-sm" (click)="goToSale()">Pagar</button>
+    <button class="btn btn-primary btn-sm" (click)="showConfirmSaleModal()">Pagar</button>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Venta -->
+<div class="modal fade" id="confirmSaleModal" tabindex="-1" aria-labelledby="confirmSaleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmSaleModalLabel">Confirmar Venta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Lista de productos en el carrito -->
+        <div class="mb-4">
+          <h4>Productos:</h4>
+          <ul class="list-group">
+            <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between">
+              <div>
+                {{ item.nombre }} (x{{ item.cantidad }})
+                <br>
+                <small class="text-muted">$ {{ item.precio.toFixed(2) }} c/u</small>
+              </div>
+              <strong>$ {{ (item.precio * item.cantidad).toFixed(2) }}</strong>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Total -->
+        <div class="mb-4">
+          <h5>Total a pagar: ${{ getTotal().toFixed(2) }}</h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmSale()">Confirmar Venta</button>
+      </div>
+    </div>
   </div>
 </div>
 

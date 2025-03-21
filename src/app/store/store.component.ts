@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
-import { AuthService } from '../auth.service'; // ✅ Correcto
-
+import { AuthService } from '../auth.service';
+import { VentaService } from '../services/sale.service'; // Importar el servicio de ventas
+import { Modal } from 'bootstrap'; // Importar Modal de Bootstrap
 
 interface Product {
   id: number;
@@ -14,7 +15,6 @@ interface Product {
   impuesto: number;
   existencia: number;
   status: boolean;
-  image: string;
 }
 
 interface CartItem {
@@ -34,21 +34,18 @@ export class StoreComponent implements OnInit {
   products: Product[] = [];
   cart: CartItem[] = [];
   cartVisible: boolean = false;
-  userName: string = '';  // ✅ Mostrar nombre de usuario
+  NombreUsuario: string = '';
 
   constructor(
     private router: Router,
     private productService: ProductService,
-    private authService: AuthService  // ✅ Inyectar AuthService
+    private authService: AuthService,
+    private ventaService: VentaService // Inyectar el servicio de ventas
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.authService.getUserName() || '';  // ✅ Obtener nombre del usuario
-    this.loadProducts();  // ✅ Cargar productos
-  }
-
-  logout(): void {
-    this.authService.logout();
+    this.NombreUsuario = this.authService.getUserName() || '';
+    this.loadProducts();
   }
 
   loadProducts(): void {
@@ -114,16 +111,53 @@ export class StoreComponent implements OnInit {
     return this.cart.reduce((sum, item) => sum + item.total, 0);
   }
 
-  goToSale(): void {
+  showConfirmSaleModal(): void {
     if (this.cart.length === 0) {
       alert('El carrito está vacío.');
       return;
     }
-    this.router.navigate(['/sale'], { state: { cart: this.cart, total: this.getTotal() } });
-    this.clearCart();
+    const confirmSaleModal = new Modal(document.getElementById('confirmSaleModal')!);
+    confirmSaleModal.show();
+  }
+
+  confirmSale(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      alert('No se pudo obtener el ID del usuario. Inicia sesión nuevamente.');
+      return;
+    }
+
+    // Crear la solicitud de venta
+    const ventaRequest = {
+      ClienteId: userId, // Usar el ID del cliente autenticado
+      AlmacenId: 1, // Cambia esto según tu lógica (puedes obtenerlo de algún lugar)
+      EstadoVentaId: 1, // Estado inicial (por ejemplo, "Pendiente")
+      Detalles: this.cart.map(item => ({
+        ProductoId: item.id,
+        Cantidad: item.cantidad
+      }))
+    };
+
+    // Enviar la solicitud al backend
+    this.ventaService.crearVenta(ventaRequest).subscribe(
+      (response: any) => {
+        alert(`Venta creada con éxito. ID de venta: ${response.VentaId}`);
+        this.clearCart();
+        const confirmSaleModal = Modal.getInstance(document.getElementById('confirmSaleModal')!);
+        confirmSaleModal?.hide(); // Cerrar el modal
+      },
+      (error) => {
+        console.error('Error al crear la venta', error);
+        alert('Hubo un error al procesar la venta. Inténtalo de nuevo.');
+      }
+    );
   }
 
   clearCart(): void {
     this.cart = [];
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }
