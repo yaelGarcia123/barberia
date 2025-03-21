@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../services/cliente.service';
+import { RegisterService } from '../register/register.service';
 import * as bootstrap from 'bootstrap';
 
 @Component({
@@ -14,7 +15,7 @@ export class AdminusuariosComponent implements OnInit {
 
   private clienteModal: bootstrap.Modal | null = null;
 
-  constructor(private clienteService: ClienteService) {}
+  constructor(private clienteService: ClienteService,private registerService : RegisterService) {}
 
   ngOnInit(): void {
     this.getClientes();
@@ -63,7 +64,7 @@ export class AdminusuariosComponent implements OnInit {
         this.closeModal();
       });
     } else {
-      this.clienteService.addCliente(this.selectedCliente).subscribe(() => {
+      this.registerService.registerCliente(this.selectedCliente).subscribe(() => {
         this.getClientes();
         this.closeModal();
       });
