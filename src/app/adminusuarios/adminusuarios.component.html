@@ -22,12 +22,12 @@
       <tr *ngFor="let cliente of clientes">
         <td>{{ cliente.id }}</td>
         <td>{{ cliente.nombre }}</td>
-        <td>{{ cliente.apellido_paterno }}</td>
-        <td>{{ cliente.apellido_materno }}</td>
+        <td>{{ cliente.apellidoPaterno }}</td>
+        <td>{{ cliente.apellidoMaterno }}</td>
         <td>{{ cliente.rfc }}</td>
-        <td>{{ cliente.codigo_postal }}</td>
+        <td>{{ cliente.codigoPostal }}</td>
         <td>{{ cliente.ciudad }}</td>
-        <td>{{ cliente.nombre_usuario }}</td>
+        <td>{{ cliente.nombreUsuario }}</td>
         <td>{{ cliente.password }}</td>
         <td>
           <button class="btn btn-warning btn-sm" (click)="openModal(cliente)">Editar</button>
