@@ -30,16 +30,16 @@ export class AdminusuariosComponent implements OnInit {
     this.isEdit = !!cliente;
     this.selectedCliente = cliente ? { ...cliente } : {
       nombre: '',
-      apellido_paterno: '',
-      apellido_materno: '',
+      apellidoaterno: '',
+      apellidoMaterno: '',
       rfc: '',
-      codigo_postal: '',
+      codigoPostal: '',
       calle: '',
-      num_ext: '',
-      num_int: '',
+      numExt: '',
+      numInt: '',
       colonia: '',
       ciudad: '',
-      nombre_usuario: '',
+      nombreUsuario: '',
       password: '',
       sexo: ''
     };
