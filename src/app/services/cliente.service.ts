@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ClienteService {
-  private apiUrl = 'https://tu-api.com/clientes'; // Reemplaza con la URL real de tu API
+  private apiUrl = 'https://localhost:7227/api/Registro'; // Reemplaza con la URL real de tu API
 
   constructor(private http: HttpClient) {}
 

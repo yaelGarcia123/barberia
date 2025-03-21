@@ -42,7 +42,7 @@ export class InventarioComponent implements OnInit {
       this.isEdit = true;
     } else {
       this.selectedProduct = {
-        id: null,
+        id: 0,
         nombre: '',
         descripcion: '',
         categoria: '',

@@ -29,8 +29,13 @@ export class AdminusuariosComponent implements OnInit {
   openModal(cliente: any = null): void {
     this.isEdit = !!cliente;
     this.selectedCliente = cliente ? { ...cliente } : {
+      id:0,
       nombre: '',
+
       apellidoaterno: '',
+
+      apellidoPaterno: '',
+
       apellidoMaterno: '',
       rfc: '',
       codigoPostal: '',
