@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../services/cliente.service';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-adminusuarios',
@@ -10,6 +11,8 @@ export class AdminusuariosComponent implements OnInit {
   clientes: any[] = [];
   selectedCliente: any = {};
   isEdit: boolean = false;
+
+  private clienteModal: bootstrap.Modal | null = null;
 
   constructor(private clienteService: ClienteService) {}
 
@@ -40,16 +43,24 @@ export class AdminusuariosComponent implements OnInit {
       password: '',
       sexo: ''
     };
+
+    const modalElement = document.getElementById('addClienteModal');
+    if (modalElement) {
+      this.clienteModal = new bootstrap.Modal(modalElement);
+      this.clienteModal.show();
+    }
   }
 
   saveCliente(): void {
     if (this.isEdit) {
       this.clienteService.updateCliente(this.selectedCliente).subscribe(() => {
         this.getClientes();
+        this.closeModal();
       });
     } else {
       this.clienteService.addCliente(this.selectedCliente).subscribe(() => {
         this.getClientes();
+        this.closeModal();
       });
     }
   }
@@ -59,6 +70,12 @@ export class AdminusuariosComponent implements OnInit {
       this.clienteService.deleteCliente(id).subscribe(() => {
         this.getClientes();
       });
+    }
+  }
+
+  closeModal(): void {
+    if (this.clienteModal) {
+      this.clienteModal.hide();
     }
   }
 }
