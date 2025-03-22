@@ -23,6 +23,8 @@ interface CartItem {
   precio: number;
   cantidad: number;
   total: number;
+  impuesto: number; // Añade esta propiedad
+
 }
 
 @Component({
@@ -76,12 +78,12 @@ export class StoreComponent implements OnInit {
       alert('Ingresa una cantidad válida.');
       return;
     }
-
+  
     if (product.existencia < quantity) {
       alert(`Solo quedan ${product.existencia} unidades disponibles.`);
       return;
     }
-
+  
     const existingItem = this.cart.find(item => item.id === product.id);
     if (existingItem) {
       if (existingItem.cantidad + quantity > product.existencia) {
@@ -96,10 +98,11 @@ export class StoreComponent implements OnInit {
         nombre: product.nombre,
         precio: product.precio,
         cantidad: quantity,
-        total: quantity * (product.precio * (1 + product.impuesto / 100))
+        total: quantity * (product.precio * (1 + product.impuesto / 100)),
+        impuesto: product.impuesto // Añade el impuesto aquí
       });
     }
-
+  
     quantityInput.value = '1';
   }
 
@@ -121,22 +124,29 @@ export class StoreComponent implements OnInit {
   }
 
   confirmSale(): void {
+    if (!this.authService.isAuthenticated()) {
+      alert('Debes iniciar sesión para realizar una compra.');
+      this.router.navigate(['/inicio']); // Redirige al usuario a la página de inicio de sesión
+      return;
+    }
     const userId = this.authService.getUserId();
     if (!userId) {
       alert('No se pudo obtener el ID del usuario. Inicia sesión nuevamente.');
       return;
     }
+    
 
     // Crear la solicitud de venta
-    const ventaRequest = {
-      ClienteId: userId, // Usar el ID del cliente autenticado
-      AlmacenId: 1, // Cambia esto según tu lógica (puedes obtenerlo de algún lugar)
-      EstadoVentaId: 1, // Estado inicial (por ejemplo, "Pendiente")
-      Detalles: this.cart.map(item => ({
-        ProductoId: item.id,
-        Cantidad: item.cantidad
-      }))
-    };
+  const ventaRequest = {
+  ClienteId: userId,
+  AlmacenId: 1,
+  EstadoVentaId: 1,
+  Detalles: this.cart.map(item => ({
+    ProductoId: item.id,
+    Cantidad: item.cantidad,
+    Impuesto: item.impuesto // Añadir el impuesto si es necesario
+  }))
+};
 
     // Enviar la solicitud al backend
     this.ventaService.crearVenta(ventaRequest).subscribe(

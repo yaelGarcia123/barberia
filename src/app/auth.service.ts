@@ -52,7 +52,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      return decodedToken.Id || decodedToken.userId || null;  // Ajusta según cómo venga el ID en el token
+      return decodedToken.nameid || null;  // Busca el ID en el campo "nameid"
     }
     return null; // Si no hay token, retornar null
   }
