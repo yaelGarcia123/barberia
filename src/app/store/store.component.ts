@@ -124,11 +124,7 @@ export class StoreComponent implements OnInit {
   }
 
   confirmSale(): void {
-    if (!this.authService.isAuthenticated()) {
-      alert('Debes iniciar sesión para realizar una compra.');
-      this.router.navigate(['/inicio']); // Redirige al usuario a la página de inicio de sesión
-      return;
-    }
+    
     const userId = this.authService.getUserId();
     if (!userId) {
       alert('No se pudo obtener el ID del usuario. Inicia sesión nuevamente.');
@@ -149,19 +145,33 @@ export class StoreComponent implements OnInit {
 };
 
     // Enviar la solicitud al backend
-    this.ventaService.crearVenta(ventaRequest).subscribe(
-      (response: any) => {
-        alert(`Venta creada con éxito. ID de venta: ${response.VentaId}`);
-        this.clearCart();
-        const confirmSaleModal = Modal.getInstance(document.getElementById('confirmSaleModal')!);
-        confirmSaleModal?.hide(); // Cerrar el modal
-      },
-      (error) => {
-        console.error('Error al crear la venta', error);
-        alert('Hubo un error al procesar la venta. Inténtalo de nuevo.');
-      }
-    );
+    this.ventaService.crearVenta(ventaRequest).subscribe({
+  next: (response: any) => {
+    alert(`Venta creada con éxito. ID de venta: ${response.VentaId}`);
+    this.clearCart();
+    const confirmSaleModal = Modal.getInstance(document.getElementById('confirmSaleModal')!);
+    confirmSaleModal?.hide(); // Cerrar el modal
+  },
+  error: (error) => {
+    console.error('Error al crear la venta:', error);
+
+    let errorMessage = 'Hubo un error al procesar la venta. Inténtalo de nuevo.';
+
+    if (error.status === 400) {
+      errorMessage = `Error de validación: ${error.error}`;
+    } else if (error.status === 404) {
+      errorMessage = `Recurso no encontrado: ${error.error}`;
+    } else if (error.status === 500) {
+      errorMessage = `Error interno del servidor: ${error.error?.message || 'Sin detalles'}`;
+      console.error('StackTrace:', error.error?.stackTrace || 'Sin traza de error');
+    }
+
+    alert(errorMessage);
   }
+  
+})
+  }
+
 
   clearCart(): void {
     this.cart = [];
