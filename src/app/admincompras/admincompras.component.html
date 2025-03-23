@@ -1,0 +1,26 @@
+<div *ngIf="compras.length > 0; else noCompras">
+    <h2>Lista de Compras</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Proveedor</th>
+          <th>Fecha de Compra</th>
+          <th>Precio Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let compra of compras">
+          <td>{{ compra.proveedor_id }}</td> <!-- Ajusta según tu estructura -->
+          <td>{{ compra.fecha_compra | date }}</td>
+          <td>{{ compra.precio_total | currency }}</td>
+          <td>{{ compra.estado_compra }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ng-template #noCompras>
+    <p>No hay compras registradas.</p>
+  </ng-template>
+  

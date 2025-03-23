@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ComprasService } from '../services/compras.service';
+import { ProductService } from '../services/product.service';
+import { ProveedoresService } from '../services/proveedores.service';
+import { AlmacenService } from '../services/almacen.service';
 
 @Component({
   selector: 'app-compras',
@@ -7,95 +11,81 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./compras.component.css']
 })
 export class ComprasComponent implements OnInit {
-  compra = {
-    proveedor_id: null,
-    precio_total: 0,
-    fecha_compra: '',
-    almacen_id: null,
-    estado_compra: 'Pendiente'
-  };
-
-  nuevoProducto = {
-    producto_id: null,
-    cantidad: 0,
-    precio_unitario: 0
-  };
-
-  productosDetalle: any[] = [];
+  compraForm!: FormGroup;
   proveedores: any[] = [];
-  almacenes: any[] = [];
   productos: any[] = [];
+  almacenes: any[] = [];
+  detallesCompra!: FormArray;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private fb: FormBuilder,
+    private comprasService: ComprasService,
+    private ProveedoresService: ProveedoresService,
+    private productService: ProductService,
+    private almacenService: AlmacenService
+  ) { }
 
   ngOnInit(): void {
-    this.cargarProveedores();
-    this.cargarAlmacenes();
-    this.cargarProductos();
+    // Inicializar formulario
+    this.compraForm = this.fb.group({
+      proveedor_id: ['', Validators.required],
+      precio_total: ['', Validators.required],
+      fecha_compra: ['', Validators.required],
+      almacen_id: [1, Validators.required],  // Valor predeterminado del almacen_id a 1
+      estado_compra: [''],
+      detallesCompra: this.fb.array([this.crearDetalle()])
+    });
+
+    this.detallesCompra = this.compraForm.get('detallesCompra') as FormArray;
+
+    // Obtener datos de la API
+    this.ProveedoresService.getProveedores().subscribe(data => this.proveedores = data);
+    this.productService.getProductos().subscribe(data => this.productos = data);
+    this.almacenService.getAlmacenes().subscribe(data => this.almacenes = data);
   }
 
-  cargarProveedores(): void {
-    this.http.get<any[]>('/api/proveedores').subscribe(data => {
-      this.proveedores = data;
+  crearDetalle(): FormGroup {
+    return this.fb.group({
+      producto_id: ['', Validators.required],
+      cantidad: ['', [Validators.required, Validators.min(1)]],
+      precio_unitario: ['', [Validators.required, Validators.min(0)]],
+      subtotal: [{ value: '', disabled: true }]
     });
   }
 
-  cargarAlmacenes(): void {
-    this.http.get<any[]>('/api/almacenes').subscribe(data => {
-      this.almacenes = data;
-    });
+  agregarDetalle(): void {
+    this.detallesCompra.push(this.crearDetalle());
   }
 
-  cargarProductos(): void {
-    this.http.get<any[]>('/api/productos').subscribe(data => {
-      this.productos = data;
-    });
+  eliminarDetalle(index: number): void {
+    this.detallesCompra.removeAt(index);
   }
 
-  agregarProducto(): void {
-    const cantidad = this.nuevoProducto.cantidad ?? 0;
-    const precioUnitario = this.nuevoProducto.precio_unitario ?? 0;
+  calcularSubtotal(index: number): void {
+    const detalle = this.detallesCompra.at(index).value;
+    const cantidad = detalle.cantidad;
+    const precioUnitario = detalle.precio_unitario;
     const subtotal = cantidad * precioUnitario;
-
-    const detalle = {
-      producto_id: this.nuevoProducto.producto_id,
-      cantidad: cantidad,
-      precio_unitario: precioUnitario,
-      subtotal: subtotal
-    };
-
-    this.productosDetalle.push(detalle);
+    this.detallesCompra.at(index).patchValue({ subtotal });
     this.actualizarPrecioTotal();
-
-    // Limpiar el formulario de producto
-    this.nuevoProducto = {
-      producto_id: null,
-      cantidad: 0,
-      precio_unitario: 0
-    };
   }
 
   actualizarPrecioTotal(): void {
-    this.compra.precio_total = this.productosDetalle.reduce((total, producto) => total + producto.subtotal, 0);
+    let total = 0;
+    this.detallesCompra.controls.forEach(detalle => {
+      total += detalle.value.subtotal || 0;
+    });
+    this.compraForm.patchValue({ precio_total: total });
   }
 
-  guardarCompra(): void {
-    const compraData = {
-      ...this.compra,
-      detalle: this.productosDetalle
-    };
+  onSubmit(): void {
+    if (this.compraForm.valid) {
+      const compraData = this.compraForm.value;
 
-    this.http.post('/api/compras', compraData).subscribe(response => {
-      console.log('Compra guardada', response);
-      // Limpiar formularios tras guardar
-      this.compra = {
-        proveedor_id: null,
-        precio_total: 0,
-        fecha_compra: '',
-        almacen_id: null,
-        estado_compra: 'Pendiente'
-      };
-      this.productosDetalle = [];
-    });
+      this.comprasService.crearCompra(compraData).subscribe(response => {
+        console.log('Compra guardada', response);
+        // Aquí puedes redirigir o hacer lo que necesites después de guardar la compra
+      });
+    }
   }
 }
