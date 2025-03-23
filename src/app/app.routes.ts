@@ -12,6 +12,8 @@ import { AdminventasComponent } from './adminventas/adminventas.component';
 import { AdmincomprasComponent } from './admincompras/admincompras.component';
 import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
 import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
+import { AdminproveedoresComponent } from './adminproveedores/adminproveedores.component';
+import { ComprasComponent } from './compras/compras.component';
 export const routes: Routes = [
 
 
@@ -31,7 +33,9 @@ export const routes: Routes = [
     { path:'adminventas', component: AdminventasComponent},
     { path:'admincompras', component:AdmincomprasComponent},
     { path: 'inicioadmin', component: InicioadminComponent},
-    { path: 'adminusuarios', component: AdminusuariosComponent}
+    { path: 'adminusuarios', component: AdminusuariosComponent},
+    { path: 'adminproveedores', component: AdminproveedoresComponent},
+    { path: 'compras', component: ComprasComponent}
 
 
 
