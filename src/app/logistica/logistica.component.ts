@@ -1,4 +1,3 @@
-// logistica.component.ts
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -16,23 +15,31 @@ export class LogisticaComponent implements OnInit {
   ngOnInit() {
     this.cargarEnvios();
   }
+
   obtenerValor(event: Event): string {
     const target = event.target as HTMLSelectElement;
     return target.value;
   }
+
   cargarEnvios() {
-    this.http.get<any[]>('https://tuapi.com/api/logistica')
+    this.http.get<any[]>('https://localhost:7227/api/Logistica')
       .subscribe({
-        next: data => this.envios = data,
+        next: data => {
+          this.envios = data;
+          console.log('Datos cargados:', this.envios);
+        },
         error: err => console.error('Error cargando envíos:', err)
       });
   }
 
   cambiarEstadoEnvio(logisticaId: number, nuevoEstado: string) {
-    this.http.put(`https://tuapi.com/api/logistica/${logisticaId}/estado`, { estado_envio: nuevoEstado })
+    this.http.put(`https://localhost:7227/api/Logistica/${logisticaId}/estado`, { estadoEnvio: nuevoEstado })
       .subscribe({
         next: () => {
-          this.envios.find(e => e.logistica_id === logisticaId).estado_envio = nuevoEstado;
+          const envio = this.envios.find(e => e.logisticaId === logisticaId);
+          if (envio) {
+            envio.estadoEnvio = nuevoEstado;
+          }
           console.log(`Estado actualizado a ${nuevoEstado}`);
         },
         error: err => console.error('Error al cambiar estado:', err)
@@ -40,10 +47,13 @@ export class LogisticaComponent implements OnInit {
   }
 
   asignarTransporte(logisticaId: number, empresa: string) {
-    this.http.put(`https://tuapi.com/api/logistica/${logisticaId}/transporte`, { empresa_transporte: empresa })
+    this.http.put(`https://localhost:7227/api/Logistica/${logisticaId}/transporte`, { empresaTransporte: empresa })
       .subscribe({
         next: () => {
-          this.envios.find(e => e.logistica_id === logisticaId).empresa_transporte = empresa;
+          const envio = this.envios.find(e => e.logisticaId === logisticaId);
+          if (envio) {
+            envio.empresaTransporte = empresa;
+          }
           console.log(`Transporte asignado: ${empresa}`);
         },
         error: err => console.error('Error asignando transporte:', err)
