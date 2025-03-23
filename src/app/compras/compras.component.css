@@ -1,0 +1,60 @@
+/* Estilos generales */
+.card {
+    max-width: 800px;
+    margin: 2rem auto;
+    border: none;
+    border-radius: 15px;
+  }
+  
+  .detalle-compra {
+    background-color: #f8f9fa;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .detalle-compra:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Botones */
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+  }
+  
+  /* Iconos */
+  .fas {
+    margin-right: 8px;
+  }
+  
+  /* Títulos */
+  h3 {
+    font-size: 1.75rem;
+    color: #007bff;
+  }
+  
+  h5 {
+    font-size: 1.25rem;
+    color: #6c757d;
+  }
+  
+  /* Inputs y Selects */
+  .form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
