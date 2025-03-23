@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<form (ngSubmit)="onSubmit()" >
-    <div>
-      <label for="proveedor">Proveedor</label>
-      <select id="proveedor" formControlName="proveedor_id">
-=======
-=======
->>>>>>> f8f4cf836836443060e0c45ef4c9a549d2a68f1c
+
 <form #compraForm="ngForm" (ngSubmit)="onSubmit(compraForm)">
   <div class="card shadow-lg p-4">
     <h3 class="mb-4 text-center text-primary">Formulario de Compra</h3>
@@ -15,10 +7,7 @@
     <div class="mb-3">
       <label for="proveedor" class="form-label fw-bold">Proveedor</label>
       <select id="proveedor" name="proveedor_id" [(ngModel)]="compra.proveedor_id" class="form-select" required>
-<<<<<<< HEAD
->>>>>>> 731880ad9c52e3a7222ff86c5fd91756658b7c4a
-=======
->>>>>>> f8f4cf836836443060e0c45ef4c9a549d2a68f1c
+
         <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
       </select>
     </div>
