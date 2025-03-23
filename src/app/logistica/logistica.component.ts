@@ -1,31 +1,52 @@
-import { Component } from '@angular/core';
+// logistica.component.ts
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-logistica',
-  templateUrl: './logistica.component.html',
-  styleUrls: ['./logistica.component.css']
+  templateUrl: './logistica.component.html'
 })
-export class LogisticaComponent {
-  repartidores: string[] = ['Juan', 'María', 'Pedro', 'Ana'];
+export class LogisticaComponent implements OnInit {
+  envios: any[] = [];
+  estadosEnvio: string[] = ['Pendiente', 'Preparando', 'En camino', 'Entregado', 'Cancelado'];
+  empresasTransporte: string[] = ['DHL', 'FedEx', 'UPS', 'Estafeta', '99 Minutos'];
 
-  orders = [
-    { id: 1, cliente: 'Carlos López', direccion: 'Calle 123', estado: 'Pendiente', repartidor: '' },
-    { id: 2, cliente: 'Ana Méndez', direccion: 'Avenida 456', estado: 'Pendiente', repartidor: '' },
-    { id: 3, cliente: 'Luis Torres', direccion: 'Boulevard 789', estado: 'Pendiente', repartidor: '' }
-  ];
+  constructor(private http: HttpClient) {}
 
-  assignRepartidor(orderId: number | undefined, event: Event) {
-    if (!orderId) return;
+  ngOnInit() {
+    this.cargarEnvios();
+  }
+  obtenerValor(event: Event): string {
+    const target = event.target as HTMLSelectElement;
+    return target.value;
+  }
+  cargarEnvios() {
+    this.http.get<any[]>('https://tuapi.com/api/logistica')
+      .subscribe({
+        next: data => this.envios = data,
+        error: err => console.error('Error cargando envíos:', err)
+      });
+  }
 
-    const selectElement = event.target as HTMLSelectElement | null;
-    if (!selectElement) return;
+  cambiarEstadoEnvio(logisticaId: number, nuevoEstado: string) {
+    this.http.put(`https://tuapi.com/api/logistica/${logisticaId}/estado`, { estado_envio: nuevoEstado })
+      .subscribe({
+        next: () => {
+          this.envios.find(e => e.logistica_id === logisticaId).estado_envio = nuevoEstado;
+          console.log(`Estado actualizado a ${nuevoEstado}`);
+        },
+        error: err => console.error('Error al cambiar estado:', err)
+      });
+  }
 
-    const repartidor = selectElement.value;
-    const order = this.orders.find(o => o.id === orderId);
-
-    if (order) {
-      order.repartidor = repartidor;
-      order.estado = repartidor ? 'En tránsito' : 'Pendiente';  // Actualiza el estado automáticamente
-    }
+  asignarTransporte(logisticaId: number, empresa: string) {
+    this.http.put(`https://tuapi.com/api/logistica/${logisticaId}/transporte`, { empresa_transporte: empresa })
+      .subscribe({
+        next: () => {
+          this.envios.find(e => e.logistica_id === logisticaId).empresa_transporte = empresa;
+          console.log(`Transporte asignado: ${empresa}`);
+        },
+        error: err => console.error('Error asignando transporte:', err)
+      });
   }
 }

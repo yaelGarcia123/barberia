@@ -1,0 +1,68 @@
+<div class="container mt-5">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">📝 Registro de Proveedor</h4>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="guardarProveedor()" #proveedorForm="ngForm" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" id="nombre" name="nombre" class="form-control" [(ngModel)]="proveedor.nombre" required />
+            </div>
+  
+            <div class="col-md-6">
+              <label for="tipo" class="form-label">Tipo</label>
+              <select id="tipo" name="tipo" class="form-select" [(ngModel)]="proveedor.tipo" required>
+                <option value="">Selecciona tipo</option>
+                <option value="Persona">Persona</option>
+                <option value="Empresa">Empresa</option>
+              </select>
+            </div>
+  
+            <div class="col-md-6">
+              <label for="rfc" class="form-label">RFC</label>
+              <input type="text" id="rfc" name="rfc" class="form-control" maxlength="13" [(ngModel)]="proveedor.rfc" required />
+            </div>
+  
+            <div class="col-md-6">
+              <label for="codigo_postal" class="form-label">Código Postal</label>
+              <input type="text" id="codigo_postal" name="codigo_postal" class="form-control" [(ngModel)]="proveedor.codigo_postal" required />
+            </div>
+  
+            <div class="col-md-6">
+              <label for="calle" class="form-label">Calle</label>
+              <input type="text" id="calle" name="calle" class="form-control" [(ngModel)]="proveedor.calle" required />
+            </div>
+  
+            <div class="col-md-3">
+              <label for="num_ext" class="form-label">Número Exterior</label>
+              <input type="text" id="num_ext" name="num_ext" class="form-control" [(ngModel)]="proveedor.num_ext" required />
+            </div>
+  
+            <div class="col-md-3">
+              <label for="num_int" class="form-label">Número Interior</label>
+              <input type="text" id="num_int" name="num_int" class="form-control" [(ngModel)]="proveedor.num_int" />
+            </div>
+  
+            <div class="col-md-6">
+              <label for="colonia" class="form-label">Colonia</label>
+              <input type="text" id="colonia" name="colonia" class="form-control" [(ngModel)]="proveedor.colonia" required />
+            </div>
+  
+            <div class="col-md-6">
+              <label for="ciudad" class="form-label">Ciudad</label>
+              <input type="text" id="ciudad" name="ciudad" class="form-control" [(ngModel)]="proveedor.ciudad" required />
+            </div>
+          </div>
+  
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg px-4" [disabled]="!proveedorForm.form.valid">
+              💾 Guardar Proveedor
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
