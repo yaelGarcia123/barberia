@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-compras',
@@ -7,21 +8,15 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./compras.component.css']
 })
 export class ComprasComponent implements OnInit {
-  compra = {
+  compra: any = {
     proveedor_id: null,
     precio_total: 0,
-    fecha_compra: '',
+    fecha_compra: new Date().toISOString().split('T')[0],
     almacen_id: null,
     estado_compra: 'Pendiente'
   };
 
-  nuevoProducto = {
-    producto_id: null,
-    cantidad: 0,
-    precio_unitario: 0
-  };
-
-  productosDetalle: any[] = [];
+  detallesCompra: any[] = [];
   proveedores: any[] = [];
   almacenes: any[] = [];
   productos: any[] = [];
@@ -35,67 +30,83 @@ export class ComprasComponent implements OnInit {
   }
 
   cargarProveedores(): void {
-    this.http.get<any[]>('/api/proveedores').subscribe(data => {
-      this.proveedores = data;
-    });
+    this.http.get<any[]>('https://localhost:7227/api/Proveedor').subscribe(
+      (data) => this.proveedores = data,
+      (error) => console.error('Error cargando proveedores:', error)
+    );
   }
 
   cargarAlmacenes(): void {
-    this.http.get<any[]>('/api/almacenes').subscribe(data => {
-      this.almacenes = data;
-    });
+    this.http.get<any[]>('https://localhost:7227/api/Almacen').subscribe(
+      (data) => this.almacenes = data,
+      (error) => console.error('Error cargando almacenes:', error)
+    );
   }
 
   cargarProductos(): void {
-    this.http.get<any[]>('/api/productos').subscribe(data => {
-      this.productos = data;
-    });
+    this.http.get<any[]>('  https://localhost:7227/api/Productos').subscribe(
+      (data) => this.productos = data,
+      (error) => console.error('Error cargando productos:', error)
+    );
   }
 
-  agregarProducto(): void {
-    const cantidad = this.nuevoProducto.cantidad ?? 0;
-    const precioUnitario = this.nuevoProducto.precio_unitario ?? 0;
-    const subtotal = cantidad * precioUnitario;
-
-    const detalle = {
-      producto_id: this.nuevoProducto.producto_id,
-      cantidad: cantidad,
-      precio_unitario: precioUnitario,
-      subtotal: subtotal
-    };
-
-    this.productosDetalle.push(detalle);
-    this.actualizarPrecioTotal();
-
-    // Limpiar el formulario de producto
-    this.nuevoProducto = {
+  agregarDetalle(): void {
+    this.detallesCompra.push({
       producto_id: null,
-      cantidad: 0,
-      precio_unitario: 0
-    };
-  }
-
-  actualizarPrecioTotal(): void {
-    this.compra.precio_total = this.productosDetalle.reduce((total, producto) => total + producto.subtotal, 0);
-  }
-
-  guardarCompra(): void {
-    const compraData = {
-      ...this.compra,
-      detalle: this.productosDetalle
-    };
-
-    this.http.post('/api/compras', compraData).subscribe(response => {
-      console.log('Compra guardada', response);
-      // Limpiar formularios tras guardar
-      this.compra = {
-        proveedor_id: null,
-        precio_total: 0,
-        fecha_compra: '',
-        almacen_id: null,
-        estado_compra: 'Pendiente'
-      };
-      this.productosDetalle = [];
+      cantidad: 1,
+      precio_unitario: 0,
+      subtotal: 0
     });
+  }
+
+  eliminarDetalle(index: number): void {
+    this.detallesCompra.splice(index, 1);
+    this.calcularPrecioTotal();
+  }
+
+  calcularSubtotal(index: number): void {
+    const detalle = this.detallesCompra[index];
+    detalle.subtotal = detalle.cantidad * detalle.precio_unitario;
+    this.calcularPrecioTotal();
+  }
+
+  calcularPrecioTotal(): void {
+    this.compra.precio_total = this.detallesCompra.reduce(
+      (total, detalle) => total + detalle.subtotal,
+      0
+    );
+  }
+
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      const compraData = {
+        ...this.compra,
+        detalles: this.detallesCompra
+      };
+
+      this.http.post('', compraData).subscribe(
+        (response) => {
+          console.log('Compra guardada:', response);
+          alert('Compra guardada exitosamente');
+          this.resetForm(form);
+        },
+        (error) => {
+          console.error('Error guardando la compra:', error);
+          alert('Error al guardar la compra');
+        }
+      );
+    }
+  }
+
+  resetForm(form: NgForm): void {
+    form.resetForm();
+    this.compra = {
+      proveedor_id: null,
+      precio_total: 0,
+      fecha_compra: new Date().toISOString().split('T')[0],
+      almacen_id: null,
+      estado_compra: 'Pendiente'
+    };
+    this.detallesCompra = [];
   }
 }

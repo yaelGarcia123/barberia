@@ -1,0 +1,80 @@
+
+<form #compraForm="ngForm" (ngSubmit)="onSubmit(compraForm)">
+  <div class="card shadow-lg p-4">
+    <h3 class="mb-4 text-center text-primary">Formulario de Compra</h3>
+
+    <!-- Proveedor -->
+    <div class="mb-3">
+      <label for="proveedor" class="form-label fw-bold">Proveedor</label>
+      <select id="proveedor" name="proveedor_id" [(ngModel)]="compra.proveedor_id" class="form-select" required>
+
+        <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Precio Total -->
+    <div class="mb-3">
+      <label for="precio_total" class="form-label fw-bold">Precio Total</label>
+      <input type="number" id="precio_total" name="precio_total" [(ngModel)]="compra.precio_total" class="form-control" required [disabled]="true" />
+    </div>
+
+    <!-- Fecha de Compra -->
+    <div class="mb-3">
+      <label for="fecha_compra" class="form-label fw-bold">Fecha de Compra</label>
+      <input type="date" id="fecha_compra" name="fecha_compra" [(ngModel)]="compra.fecha_compra" class="form-control" required />
+    </div>
+
+    <!-- Almacén -->
+    <div class="mb-3">
+      <label for="almacen_id" class="form-label fw-bold">Almacén</label>
+      <select id="almacen_id" name="almacen_id" [(ngModel)]="compra.almacen_id" class="form-select" required>
+        <option *ngFor="let almacen of almacenes" [value]="almacen.id">{{ almacen.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Estado de la Compra -->
+    <div class="mb-3">
+      <label for="estado_compra" class="form-label fw-bold">Estado de la Compra</label>
+      <input type="text" id="estado_compra" name="estado_compra" [(ngModel)]="compra.estado_compra" class="form-control" />
+    </div>
+
+    <!-- Detalles de Compra -->
+    <div *ngFor="let detalle of detallesCompra; let i = index" class="detalle-compra mb-4 p-3 border rounded">
+      <h5 class="mb-3 text-secondary">Producto {{ i + 1 }}</h5>
+
+      <div class="mb-3">
+        <label for="producto_id" class="form-label fw-bold">Producto</label>
+        <select name="producto_id" [(ngModel)]="detalle.producto_id" (change)="calcularSubtotal(i)" class="form-select" required>
+          <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="cantidad" class="form-label fw-bold">Cantidad</label>
+        <input type="number" name="cantidad" [(ngModel)]="detalle.cantidad" (change)="calcularSubtotal(i)" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="precio_unitario" class="form-label fw-bold">Precio Unitario</label>
+        <input type="number" name="precio_unitario" [(ngModel)]="detalle.precio_unitario" (change)="calcularSubtotal(i)" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="subtotal" class="form-label fw-bold">Subtotal</label>
+        <input type="number" name="subtotal" [(ngModel)]="detalle.subtotal" class="form-control" [disabled]="true" />
+      </div>
+
+      <button type="button" (click)="eliminarDetalle(i)" class="btn btn-danger w-100">Eliminar Producto</button>
+    </div>
+
+    <!-- Agregar Producto -->
+    <button type="button" (click)="agregarDetalle()" class="btn btn-success w-100 mb-4">
+      <i class="fas fa-plus-circle"></i> Agregar Producto
+    </button>
+
+    <!-- Botón de Submit -->
+    <button type="submit" [disabled]="!compraForm.valid" class="btn btn-primary w-100">
+      <i class="fas fa-save"></i> Guardar Compra
+    </button>
+  </div>
+</form>
