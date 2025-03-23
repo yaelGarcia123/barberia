@@ -6,35 +6,45 @@
       <thead class="table-dark">
         <tr>
           <th>#</th>
-          <th>Cliente</th>
-          <th>Dirección</th>
+          <th>Venta ID</th>
+          <th>Tipo de Envío</th>
+          <th>Empresa Transporte</th>
           <th>Estado</th>
-          <th>Repartidor</th>
-          <th>Acciones</th>
+          <th>Fecha Estimada</th>
+          <th>Actualizar Estado</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of orders">
-          <td class="fw-bold">{{ order.id }}</td>
-          <td>{{ order.cliente }}</td>
-          <td>{{ order.direccion }}</td>
+        <tr *ngFor="let envio of envios">
+          <td class="fw-bold">{{ envio.logistica_id }}</td>
+          <td>{{ envio.venta_id }}</td>
+          <td>{{ envio.tipo_envio }}</td>
+          <td class="fw-bold" [ngClass]="{'text-danger': !envio.empresa_transporte}">
+            {{ envio.empresa_transporte || 'No asignada' }}
+          </td>
           <td>
             <span class="badge fs-6" [ngClass]="{
-              'bg-warning text-dark': order.estado === 'Pendiente',
-              'bg-primary': order.estado === 'En tránsito',
-              'bg-success': order.estado === 'Entregado'
+              'bg-warning text-dark': envio.estado_envio === 'Pendiente' || envio.estado_envio === 'Preparando',
+              'bg-primary': envio.estado_envio === 'En camino',
+              'bg-success': envio.estado_envio === 'Entregado',
+              'bg-danger': envio.estado_envio === 'Cancelado'
             }">
-              {{ order.estado }}
+              {{ envio.estado_envio }}
             </span>
           </td>
-          <td class="fw-bold" [ngClass]="{'text-danger': !order.repartidor}">
-            {{ order.repartidor || 'No asignado' }}
-          </td>
+          <td>{{ envio.fecha_entrega_estimada | date:'shortDate' }}</td>
           <td>
-            <select class="form-select form-select-lg" (change)="assignRepartidor(order?.id, $event)">
-              <option value="">Asignar Repartidor</option>
-              <option *ngFor="let rep of repartidores" [value]="rep">{{ rep }}</option>
-            </select>
+            <select class="form-select form-select-sm mb-1" 
+            (change)="cambiarEstadoEnvio(envio.logistica_id, obtenerValor($event))">
+      <option disabled selected>Actualizar Estado</option>
+      <option *ngFor="let estado of estadosEnvio" [value]="estado">{{ estado }}</option>
+    </select>
+    
+    <select class="form-select form-select-sm" 
+            (change)="asignarTransporte(envio.logistica_id, obtenerValor($event))">
+      <option disabled selected>Asignar Transporte</option>
+      <option *ngFor="let empresa of empresasTransporte" [value]="empresa">{{ empresa }}</option>
+    </select>
           </td>
         </tr>
       </tbody>
