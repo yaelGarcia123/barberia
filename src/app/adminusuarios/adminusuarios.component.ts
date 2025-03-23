@@ -32,11 +32,7 @@ export class AdminusuariosComponent implements OnInit {
     this.selectedCliente = cliente ? { ...cliente } : {
       id:0,
       nombre: '',
-
-      apellidoaterno: '',
-
       apellidoPaterno: '',
-
       apellidoMaterno: '',
       rfc: '',
       codigoPostal: '',
