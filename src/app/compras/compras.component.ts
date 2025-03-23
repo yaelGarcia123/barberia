@@ -30,21 +30,21 @@ export class ComprasComponent implements OnInit {
   }
 
   cargarProveedores(): void {
-    this.http.get<any[]>('https://tudominio.com/api/proveedores').subscribe(
+    this.http.get<any[]>('https://localhost:7227/api/Proveedor').subscribe(
       (data) => this.proveedores = data,
       (error) => console.error('Error cargando proveedores:', error)
     );
   }
 
   cargarAlmacenes(): void {
-    this.http.get<any[]>('https://tudominio.com/api/almacenes').subscribe(
+    this.http.get<any[]>('https://localhost:7227/api/Almacen').subscribe(
       (data) => this.almacenes = data,
       (error) => console.error('Error cargando almacenes:', error)
     );
   }
 
   cargarProductos(): void {
-    this.http.get<any[]>('https://tudominio.com/api/productos').subscribe(
+    this.http.get<any[]>('  https://localhost:7227/api/Productos').subscribe(
       (data) => this.productos = data,
       (error) => console.error('Error cargando productos:', error)
     );
@@ -84,7 +84,7 @@ export class ComprasComponent implements OnInit {
         detalles: this.detallesCompra
       };
 
-      this.http.post('https://tudominio.com/api/compras', compraData).subscribe(
+      this.http.post('', compraData).subscribe(
         (response) => {
           console.log('Compra guardada:', response);
           alert('Compra guardada exitosamente');
