@@ -1,0 +1,61 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="compraForm">
+    <div>
+      <label for="proveedor">Proveedor</label>
+      <select id="proveedor" formControlName="proveedor_id">
+        <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="precio_total">Precio Total</label>
+      <input type="number" id="precio_total" formControlName="precio_total" required />
+    </div>
+  
+    <div>
+      <label for="fecha_compra">Fecha de Compra</label>
+      <input type="date" id="fecha_compra" formControlName="fecha_compra" required />
+    </div>
+  
+    <div>
+      <label for="almacen_id">Almacén</label>
+      <select id="almacen_id" formControlName="almacen_id">
+        <option *ngFor="let almacen of almacenes" [value]="almacen.id">{{ almacen.nombre }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="estado_compra">Estado de la Compra</label>
+      <input type="text" id="estado_compra" formControlName="estado_compra" />
+    </div>
+  
+    <div *ngFor="let detalle of detallesCompra; let i = index">
+      <h3>Producto {{ i + 1 }}</h3>
+      <div>
+        <label for="producto_id">Producto</label>
+        <select formControlName="producto_id" (change)="calcularSubtotal(i)">
+          <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+        </select>
+      </div>
+  
+      <div>
+        <label for="cantidad">Cantidad</label>
+        <input type="number" formControlName="cantidad" (change)="calcularSubtotal(i)" />
+      </div>
+  
+      <div>
+        <label for="precio_unitario">Precio Unitario</label>
+        <input type="number" formControlName="precio_unitario" (change)="calcularSubtotal(i)" />
+      </div>
+  
+      <div>
+        <label for="subtotal">Subtotal</label>
+        <input type="number" formControlName="subtotal" disabled />
+      </div>
+  
+      <button type="button" (click)="eliminarDetalle(i)">Eliminar Producto</button>
+    </div>
+  
+    <button type="button" (click)="agregarDetalle()">Agregar Producto</button>
+    <button type="submit" [disabled]="!compraForm.valid">Guardar Compra</button>
+  </form>
+  
