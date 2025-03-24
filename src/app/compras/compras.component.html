@@ -1,4 +1,3 @@
-
 <form #compraForm="ngForm" (ngSubmit)="onSubmit(compraForm)">
   <div class="card shadow-lg p-4">
     <h3 class="mb-4 text-center text-primary">Formulario de Compra</h3>
@@ -7,7 +6,6 @@
     <div class="mb-3">
       <label for="proveedor" class="form-label fw-bold">Proveedor</label>
       <select id="proveedor" name="proveedor_id" [(ngModel)]="compra.proveedor_id" class="form-select" required>
-
         <option *ngFor="let proveedor of proveedores" [value]="proveedor.id">{{ proveedor.nombre }}</option>
       </select>
     </div>
@@ -76,5 +74,5 @@
     <button type="submit" [disabled]="!compraForm.valid" class="btn btn-primary w-100">
       <i class="fas fa-save"></i> Guardar Compra
     </button>
-  </div>
+  </div>
 </form>

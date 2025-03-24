@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
+import { ComprasService } from '../services/compras.service';  // Asegúrate de importar el servicio
 
 @Component({
   selector: 'app-compras',
@@ -9,10 +10,10 @@ import { NgForm } from '@angular/forms';
 })
 export class ComprasComponent implements OnInit {
   compra: any = {
-    proveedor_id: null,
+    proveedor_id: 0,
     precio_total: 0,
     fecha_compra: new Date().toISOString().split('T')[0],
-    almacen_id: null,
+    almacen_id: 0,
     estado_compra: 'Pendiente'
   };
 
@@ -21,7 +22,7 @@ export class ComprasComponent implements OnInit {
   almacenes: any[] = [];
   productos: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private comprasService: ComprasService) {}  // Inyecta el servicio
 
   ngOnInit(): void {
     this.cargarProveedores();
@@ -44,7 +45,7 @@ export class ComprasComponent implements OnInit {
   }
 
   cargarProductos(): void {
-    this.http.get<any[]>('  https://localhost:7227/api/Productos').subscribe(
+    this.http.get<any[]>('https://localhost:7227/api/Productos').subscribe(
       (data) => this.productos = data,
       (error) => console.error('Error cargando productos:', error)
     );
@@ -79,12 +80,25 @@ export class ComprasComponent implements OnInit {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
+      // Preparar los datos de la compra
       const compraData = {
-        ...this.compra,
-        detalles: this.detallesCompra
+        proveedorId: this.compra.proveedor_id,
+        precioTotal: this.compra.precio_total,
+        fechaCompra: this.compra.fecha_compra,
+        almacenId: this.compra.almacen_id,
+        estadoCompra: this.compra.estado_compra,
+        detallesCompra: this.detallesCompra.map(detalle => ({
+          productoId: detalle.producto_id,
+          cantidad: detalle.cantidad,
+          precioUnitario: detalle.precio_unitario,
+          subtotal: detalle.subtotal
+        }))
       };
-
-      this.http.post('', compraData).subscribe(
+  
+      console.log('Datos enviados:', compraData);  // Depuración
+  
+      // Enviar la compra al backend
+      this.comprasService.crearCompra(compraData).subscribe(
         (response) => {
           console.log('Compra guardada:', response);
           alert('Compra guardada exitosamente');
@@ -97,7 +111,6 @@ export class ComprasComponent implements OnInit {
       );
     }
   }
-
   resetForm(form: NgForm): void {
     form.resetForm();
     this.compra = {

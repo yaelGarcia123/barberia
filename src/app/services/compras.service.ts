@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ComprasService {
 
-  private apiUrl = 'https://localhost:7227/api/Compra';  // Cambia esta URL por la de tu API
+  private apiUrl = 'https://localhost:7227/api/Compra';  // Asegúrate de que esta URL sea correcta
 
   constructor(private http: HttpClient) { }
 
@@ -21,5 +21,3 @@ export class ComprasService {
     return this.http.get<any[]>(this.apiUrl);
   }
 }
-
-
