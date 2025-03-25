@@ -23,6 +23,11 @@ import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
 import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
 import { AdminproveedoresComponent } from './adminproveedores/adminproveedores.component';
 import { ComprasComponent } from './compras/compras.component';
+import { MatIconModule } from '@angular/material/icon'; // <-- Agregar esto
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // <-- Módulo para mat-spinner
+import { NuevacompraComponent } from './nuevacompra/nuevacompra.component';
+import { MatSelectModule } from '@angular/material/select'; // Import MatSelectModule
+import { MatOptionModule } from '@angular/material/core'; // Import MatOptionModule
 
 @NgModule({
   declarations: [
@@ -40,7 +45,8 @@ import { ComprasComponent } from './compras/compras.component';
     InicioadminComponent,
     AdminusuariosComponent,
     AdminproveedoresComponent,
-    ComprasComponent
+    ComprasComponent,
+    NuevacompraComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,11 @@ import { ComprasComponent } from './compras/compras.component';
     MatFormFieldModule, // Asegúrate de agregar este módulo
     MatInputModule,
     MatTableModule,
-    HttpClientModule // 👈 Asegúrate de que esté aquí
+    HttpClientModule, // 👈 Asegúrate de que esté aquí
+    MatIconModule, // <-- Agregar esto
+    MatProgressSpinnerModule,
+    MatOptionModule,
+    MatSelectModule // <-- Agregado aquí
 
 
   ],

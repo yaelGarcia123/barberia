@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AlmacenService {
-  private apiUrl = 'http://localhost:5000/api/almacenes';  // URL de tu API, ajústala según sea necesario
+  private apiUrl = 'https://localhost:7227/api/Almacen';  // URL de tu API, ajústala según sea necesario
 
   constructor(private http: HttpClient) { }
 

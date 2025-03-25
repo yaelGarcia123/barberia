@@ -1,112 +1,88 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
-
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CompraService } from '../services/compras.service'; // Corregido el nombre del servicio
+import { Compra } from '../services/compra.model'; // Asegúrate de que la ruta del modelo sea correcta
+import { AdmincomprasComponent } from '../admincompras/admincompras.component';
+import { NuevacompraComponent } from '../nuevacompra/nuevacompra.component';
 @Component({
   selector: 'app-compras',
   templateUrl: './compras.component.html',
   styleUrls: ['./compras.component.css']
 })
 export class ComprasComponent implements OnInit {
-  compra: any = {
-    proveedor_id: null,
-    precio_total: 0,
-    fecha_compra: new Date().toISOString().split('T')[0],
-    almacen_id: null,
-    estado_compra: 'Pendiente'
-  };
+  compras: Compra[] = [];
+  loading = true;
+  displayedColumns: string[] = ['compraId', 'fecha', 'proveedor', 'almacen', 'total', 'estado', 'acciones'];
 
-  detallesCompra: any[] = [];
-  proveedores: any[] = [];
-  almacenes: any[] = [];
-  productos: any[] = [];
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private compraService: CompraService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
-    this.cargarProveedores();
-    this.cargarAlmacenes();
-    this.cargarProductos();
+    this.loadCompras();
   }
 
-  cargarProveedores(): void {
-    this.http.get<any[]>('https://localhost:7227/api/Proveedor').subscribe(
-      (data) => this.proveedores = data,
-      (error) => console.error('Error cargando proveedores:', error)
-    );
-  }
-
-  cargarAlmacenes(): void {
-    this.http.get<any[]>('https://localhost:7227/api/Almacen').subscribe(
-      (data) => this.almacenes = data,
-      (error) => console.error('Error cargando almacenes:', error)
-    );
-  }
-
-  cargarProductos(): void {
-    this.http.get<any[]>('  https://localhost:7227/api/Productos').subscribe(
-      (data) => this.productos = data,
-      (error) => console.error('Error cargando productos:', error)
-    );
-  }
-
-  agregarDetalle(): void {
-    this.detallesCompra.push({
-      producto_id: null,
-      cantidad: 1,
-      precio_unitario: 0,
-      subtotal: 0
+  loadCompras(): void {
+    this.loading = true;
+    this.compraService.getCompras().subscribe({
+      next: (data) => {
+        this.compras = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar compras:', err);
+        this.snackBar.open('Error al cargar las compras', 'Cerrar', { duration: 3000 });
+        this.loading = false;
+      }
     });
   }
 
-  eliminarDetalle(index: number): void {
-    this.detallesCompra.splice(index, 1);
-    this.calcularPrecioTotal();
+  openDetalle(compra: Compra): void {
+    this.dialog.open(AdmincomprasComponent, {
+      width: '800px',
+      data: { compra }
+    });
   }
 
-  calcularSubtotal(index: number): void {
-    const detalle = this.detallesCompra[index];
-    detalle.subtotal = detalle.cantidad * detalle.precio_unitario;
-    this.calcularPrecioTotal();
+  openNuevaCompra(): void {
+    const dialogRef = this.dialog.open(NuevacompraComponent, {
+      height:'500px',
+      width: '800px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'success') {
+        this.loadCompras();
+        this.snackBar.open('Compra creada exitosamente', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
-  calcularPrecioTotal(): void {
-    this.compra.precio_total = this.detallesCompra.reduce(
-      (total, detalle) => total + detalle.subtotal,
-      0
-    );
-  }
-
-  onSubmit(form: NgForm): void {
-    if (form.valid) {
-      const compraData = {
-        ...this.compra,
-        detalles: this.detallesCompra
-      };
-
-      this.http.post('', compraData).subscribe(
-        (response) => {
-          console.log('Compra guardada:', response);
-          alert('Compra guardada exitosamente');
-          this.resetForm(form);
+  deleteCompra(id: number): void {
+    if (confirm('¿Estás seguro de eliminar esta compra?')) {
+      this.compraService.deleteCompra(id).subscribe({
+        next: () => {
+          this.loadCompras();
+          this.snackBar.open('Compra eliminada exitosamente', 'Cerrar', { duration: 3000 });
         },
-        (error) => {
-          console.error('Error guardando la compra:', error);
-          alert('Error al guardar la compra');
+        error: (err) => {
+          console.error('Error al eliminar compra:', err);
+          this.snackBar.open('Error al eliminar la compra', 'Cerrar', { duration: 3000 });
         }
-      );
+      });
     }
   }
 
-  resetForm(form: NgForm): void {
-    form.resetForm();
-    this.compra = {
-      proveedor_id: null,
-      precio_total: 0,
-      fecha_compra: new Date().toISOString().split('T')[0],
-      almacen_id: null,
-      estado_compra: 'Pendiente'
-    };
-    this.detallesCompra = [];
+  // Método para obtener la clase CSS según el estado
+  getEstadoClass(estado: string): string {
+    switch (estado.toLowerCase()) {
+      case 'pendiente': return 'estado-pendiente';
+      case 'completada': return 'estado-completada';
+      case 'cancelada': return 'estado-cancelada';
+      default: return '';
+    }
   }
 }
