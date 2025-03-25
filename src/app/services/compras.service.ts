@@ -1,23 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Compra } from '../services/compra.model';
+import { environment } from '../../app/services/enviorenment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ComprasService {
-
-  private apiUrl = 'https://localhost:7227/api/Compra';  // Asegúrate de que esta URL sea correcta
+export class CompraService {
+  private apiUrl = `${environment.apiUrl}/api/Compra`;
 
   constructor(private http: HttpClient) { }
 
-  // Método para crear una nueva compra
-  crearCompra(compraData: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, compraData);
+  getCompras(): Observable<Compra[]> {
+    return this.http.get<Compra[]>(this.apiUrl);
   }
 
-  // Método para obtener todas las compras
-  verCompras(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getCompra(id: number): Observable<Compra> {
+    return this.http.get<Compra>(`${this.apiUrl}/${id}`);
+  }
+
+  createCompra(compra: Compra): Observable<Compra> {
+    return this.http.post<Compra>(this.apiUrl, compra);
+  }
+
+  updateCompra(id: number, compra: Compra): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, compra);
+  }
+
+  deleteCompra(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

@@ -1,0 +1,49 @@
+.info-section {
+    margin-bottom: 20px;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info-label {
+    font-weight: 500;
+    color: #666;
+    font-size: 0.9em;
+  }
+  
+  .info-value {
+    font-size: 1.1em;
+  }
+  
+  .details-section {
+    margin-top: 30px;
+  }
+  
+  table {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .estado-pendiente {
+    color: #ff9800;
+    font-weight: 500;
+  }
+  
+  .estado-completada {
+    color: #4caf50;
+    font-weight: 500;
+  }
+  
+  .estado-cancelada {
+    color: #f44336;
+    font-weight: 500;
+  }

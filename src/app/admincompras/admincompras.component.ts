@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { ComprasService } from '../services/compras.service';
+import { Component, Inject  } from '@angular/core';
+import { CompraService } from '../services/compras.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Compra } from '../services/compra.model'; // Asegúrate de que la ruta del modelo sea correcta
 
 @Component({
   selector: 'app-admincompras',
@@ -7,26 +9,14 @@ import { ComprasService } from '../services/compras.service';
   styleUrl: './admincompras.component.css'
 })
 export class AdmincomprasComponent {
-  compras: any[] = [];
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { compra: Compra }) { }
 
-  constructor(private comprasService: ComprasService) { }
-
-  ngOnInit(): void {
-    // Obtener todas las compras al cargar el componente
-    this.obtenerCompras();
-  }
-
-  obtenerCompras(): void {
-    this.comprasService.verCompras().subscribe({
-      next: (data) => {
-        this.compras = data;
-      },
-      error: (error) => {
-        console.error('Error al obtener las compras:', error);
-      },
-      complete: () => {
-        console.log('Operación de obtención de compras completada.');
-      }
-    });
+  getEstadoClass(estado: string): string {
+    switch (estado.toLowerCase()) {
+      case 'pendiente': return 'estado-pendiente';
+      case 'completada': return 'estado-completada';
+      case 'cancelada': return 'estado-cancelada';
+      default: return '';
+    }
   }
 }

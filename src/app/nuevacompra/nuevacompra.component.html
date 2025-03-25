@@ -1,0 +1,116 @@
+<h1 mat-dialog-title>Nueva Compra</h1>
+<div mat-dialog-content>
+  <form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+      <!-- Sección de información general -->
+      <div class="form-section">
+        <h3>Información General</h3>
+        
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Proveedor</mat-label>
+          <mat-select formControlName="proveedorId" required>
+            <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.id">
+              {{ proveedor.id }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="compraForm.get('proveedorId')?.hasError('required')">
+            Proveedor es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Almacén</mat-label>
+          <mat-select formControlName="almacenId" required>
+            <mat-option *ngFor="let almacen of almacenes" [value]="almacen.id">
+              {{ almacen.id }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="compraForm.get('almacenId')?.hasError('required')">
+            Almacén es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estadoCompra" required>
+            <mat-option value="Pendiente">Pendiente</mat-option>
+            <mat-option value="Completada">Completada</mat-option>
+            <mat-option value="Cancelada">Cancelada</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Sección de detalles de compra -->
+      <div class="form-section">
+        <h3>Detalles de Compra</h3>
+        
+        <div formArrayName="detallesCompra" *ngFor="let detalle of detallesCompra.controls; let i = index">
+          <div [formGroupName]="i" class="detalle-item">
+            <div class="detalle-fields">
+              <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Producto</mat-label>
+                <mat-select formControlName="productoId" required>
+                  <mat-option *ngFor="let producto of productos" [value]="producto.id">
+                    {{ producto.nombre }} ({{ producto.categoria }})
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="detalle.get('productoId')?.hasError('required')">
+                  Producto es requerido
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Cantidad</mat-label>
+                <input matInput type="number" formControlName="cantidad" 
+                       (change)="calcularSubtotal(detalle)" min="1" required>
+                <mat-error *ngIf="detalle.get('cantidad')?.hasError('required')">
+                  Cantidad es requerida
+                </mat-error>
+                <mat-error *ngIf="detalle.get('cantidad')?.hasError('min')">
+                  Mínimo 1
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Precio Unitario</mat-label>
+                <input matInput type="number" formControlName="precioUnitario" 
+                       (change)="calcularSubtotal(detalle)" min="0" required>
+                <span matPrefix>$ &nbsp;</span>
+                <mat-error *ngIf="detalle.get('precioUnitario')?.hasError('required')">
+                  Precio es requerido
+                </mat-error>
+                <mat-error *ngIf="detalle.get('precioUnitario')?.hasError('min')">
+                  Mínimo 0
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="form-field">
+                <mat-label>Subtotal</mat-label>
+                <input matInput type="number" formControlName="subtotal" readonly>
+                <span matPrefix>$ &nbsp;</span>
+              </mat-form-field>
+            </div>
+
+            <button mat-icon-button color="warn" type="button" 
+                    (click)="removeDetalleCompra(i)" *ngIf="detallesCompra.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button mat-button type="button" color="primary" 
+                (click)="addDetalleCompra()" class="add-button">
+          <mat-icon>add</mat-icon> Agregar Producto
+        </button>
+      </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="compraForm.invalid || loading">
+        <span *ngIf="!loading">Guardar Compra</span>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </button>
+    </div>
+  </form>
+</div>

@@ -14,6 +14,7 @@ import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
 import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
 import { AdminproveedoresComponent } from './adminproveedores/adminproveedores.component';
 import { ComprasComponent } from './compras/compras.component';
+import { NuevacompraComponent } from './nuevacompra/nuevacompra.component';
 export const routes: Routes = [
 
 
@@ -25,7 +26,7 @@ export const routes: Routes = [
     { path: 'store', component: StoreComponent },
     { path: 'inventario', component: InventarioComponent },
     { path: 'logistica', component: LogisticaComponent },
-
+    { path: 'nuevacompra', component: NuevacompraComponent },
     { path:'productos', component: ProductosComponent},
     { path: 'account', component: AccountComponent},
     { path:'sale', component: SaleComponent},
