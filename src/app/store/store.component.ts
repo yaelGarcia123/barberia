@@ -91,14 +91,14 @@ export class StoreComponent implements OnInit {
         return;
       }
       existingItem.cantidad += quantity;
-      existingItem.total = existingItem.cantidad * (product.precio * (1 + product.impuesto / 100));
+      existingItem.total = existingItem.cantidad * (product.precio * (1 + product.impuesto));
     } else {
       this.cart.push({
         id: product.id,
         nombre: product.nombre,
         precio: product.precio,
         cantidad: quantity,
-        total: quantity * (product.precio * (1 + product.impuesto / 100)),
+        total: quantity * (product.precio * (1 + product.impuesto)),
         impuesto: product.impuesto // Añade el impuesto aquí
       });
     }

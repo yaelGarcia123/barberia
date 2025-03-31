@@ -51,7 +51,7 @@
                 <mat-label>Producto</mat-label>
                 <mat-select formControlName="productoId" required>
                   <mat-option *ngFor="let producto of productos" [value]="producto.id">
-                    {{ producto.nombre }} ({{ producto.categoria }})
+                    {{ producto.id }} ({{ producto.nombre }})
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="detalle.get('productoId')?.hasError('required')">

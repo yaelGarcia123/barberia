@@ -44,7 +44,7 @@
           <p class="text-center"><strong>Categoría:</strong> {{ product.categoria }}</p>
           <p class="text-center mb-1"><strong>Precio:</strong> $ {{ product.precio.toFixed(2) }}</p>
           <p class="text-center mb-1"><strong>Impuesto:</strong> {{ product.impuesto }}%</p>
-          <p class="text-center mb-2"><strong>Total:</strong> $ {{ (product.precio * (1 + product.impuesto / 100)).toFixed(2) }}</p>
+          <p class="text-center mb-2"><strong>Total:</strong> $ {{ (product.precio * (1 + product.impuesto)).toFixed(2) }}</p>
           <p class="text-center" [ngClass]="{'text-danger': product.existencia === 0, 'text-success': product.existencia > 0}">
             <strong>Disponibles:</strong> {{ product.existencia }}
           </p>
