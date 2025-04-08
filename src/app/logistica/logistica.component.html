@@ -35,16 +35,16 @@
           <td>{{ envio.fechaEntregaEstimada | date:'shortDate' }}</td>
           <td>
             <select class="form-select form-select-sm mb-1" 
-                    (change)="cambiarEstadoEnvio(envio.logisticaId, obtenerValor($event))">
-              <option disabled selected>Actualizar Estado</option>
-              <option *ngFor="let estado of estadosEnvio" [value]="estado">{{ estado }}</option>
-            </select>
-            
-            <select class="form-select form-select-sm" 
-                    (change)="asignarTransporte(envio.logisticaId, obtenerValor($event))">
-              <option disabled selected>Asignar Transporte</option>
-              <option *ngFor="let empresa of empresasTransporte" [value]="empresa">{{ empresa }}</option>
-            </select>
+            (change)="cambiarEstadoEnvio(envio.logisticaId, $event)">
+      <option disabled selected>Actualizar Estado</option>
+      <option *ngFor="let estado of estadosEnvio" [value]="estado">{{ estado }}</option>
+    </select>
+    
+    <select class="form-select form-select-sm" 
+            (change)="asignarTransporte(envio.logisticaId, $event)">
+      <option disabled selected>Asignar Transporte</option>
+      <option *ngFor="let empresa of empresasTransporte" [value]="empresa">{{ empresa }}</option>
+    </select>
           </td>
         </tr>
       </tbody>
