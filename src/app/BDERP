@@ -1,0 +1,84 @@
+-- Base de datos
+CREATE DATABASE NominaEmpleados;
+GO
+USE NominaEmpleados;
+GO
+
+-- Tabla: Empleado
+CREATE TABLE Empleado (
+    IdEmpleado INT PRIMARY KEY IDENTITY(1,1),
+    RFC VARCHAR(20) NOT NULL UNIQUE,
+    TipoContrato VARCHAR(50),
+    Nombre VARCHAR(100),
+    Apellido VARCHAR(100),
+    Puesto VARCHAR(100),
+    ModoPago VARCHAR(50),
+    Correo VARCHAR(100),
+    Departamento VARCHAR(100),
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(20),
+    FechaIngreso DATE,
+    Salario DECIMAL(18,2)
+);
+GO
+
+-- Tabla: Incapacidad
+CREATE TABLE Incapacidad (
+    IdIncapacidad INT PRIMARY KEY IDENTITY(1,1),
+    FolioIncapacidad VARCHAR(20) NOT NULL UNIQUE,
+    RFC VARCHAR(20),
+    FechaInicial DATE,
+    FechaFinal DATE,
+    TotalDias AS DATEDIFF(DAY, FechaInicial, FechaFinal) PERSISTED,
+    Motivo VARCHAR(255),
+    Estatus VARCHAR(50),
+    FOREIGN KEY (RFC) REFERENCES Empleado(RFC)
+);
+GO
+
+-- Tabla: Nómina
+CREATE TABLE Nomina (
+    IdNomina INT PRIMARY KEY IDENTITY(1,1),
+    RFC VARCHAR(20) NOT NULL,
+    Fecha DATE,
+    Periodo VARCHAR(50),
+    DiasPagados INT,
+    TipoPago VARCHAR(50),
+    SueldoBruto DECIMAL(18,2),
+    TotalPercepciones DECIMAL(18,2),
+    TotalDeducciones DECIMAL(18,2),
+    SueldoNeto DECIMAL(18,2),
+    FOREIGN KEY (RFC) REFERENCES Empleado(RFC)
+);
+GO
+
+-- Tabla: Percepciones
+CREATE TABLE Percepciones (
+    IdPercepcion INT PRIMARY KEY IDENTITY(1,1),
+    IdNomina INT NOT NULL,
+    SueldoBase DECIMAL(18,2),
+    Puntualidad DECIMAL(18,2),
+    ValesDespensa DECIMAL(18,2),
+    Compensaciones DECIMAL(18,2),
+    Vacaciones DECIMAL(18,2),
+    PrimaAntiguedad DECIMAL(18,2),
+    OtrasPrestaciones DECIMAL(18,2),
+    FOREIGN KEY (IdNomina) REFERENCES Nomina(IdNomina)
+);
+GO
+
+-- Tabla: Deducciones
+CREATE TABLE Deducciones (
+    IdDeduccion INT PRIMARY KEY IDENTITY(1,1),
+    IdNomina INT NOT NULL,
+    ISR DECIMAL(18,2),
+    IMSS DECIMAL(18,2),
+    INFONAVIT DECIMAL(18,2),
+    CajaAhorro DECIMAL(18,2),
+    Prestamos DECIMAL(18,2),
+    FONACOT DECIMAL(18,2),
+    CuotaSindical DECIMAL(18,2),
+    Otras DECIMAL(18,2),
+    FOREIGN KEY (IdNomina) REFERENCES Nomina(IdNomina)
+);
+GO

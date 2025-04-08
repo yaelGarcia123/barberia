@@ -130,7 +130,16 @@ export class StoreComponent implements OnInit {
       alert('No se pudo obtener el ID del usuario. Inicia sesión nuevamente.');
       return;
     }
-    
+    /*
+Swing your partner 'round and 'round
+End of the night, it's going down
+One more shot, another round
+End of the night, it's going down
+Swing your partner 'round and 'round
+End of the night, it's going down (oh-oh-oh)
+One more shot, another round
+End of the night, it's going down
+    */
 
     // Crear la solicitud de venta
   const ventaRequest = {

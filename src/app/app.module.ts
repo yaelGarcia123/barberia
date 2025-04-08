@@ -23,6 +23,9 @@ import { InicioadminComponent } from './inicioadmin/inicioadmin.component';
 import { AdminusuariosComponent } from './adminusuarios/adminusuarios.component';
 import { AdminproveedoresComponent } from './adminproveedores/adminproveedores.component';
 import { ComprasComponent } from './compras/compras.component';
+import { RegistroempleadoComponent } from './registroempleado/registroempleado.component';
+import { EmpleadosComponent } from './empleados/empleados.component';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +43,9 @@ import { ComprasComponent } from './compras/compras.component';
     InicioadminComponent,
     AdminusuariosComponent,
     AdminproveedoresComponent,
-    ComprasComponent
+    ComprasComponent,
+    RegistroempleadoComponent,
+    EmpleadosComponent
   ],
   imports: [
     BrowserModule,
