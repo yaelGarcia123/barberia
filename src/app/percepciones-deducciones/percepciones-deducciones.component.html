@@ -1,0 +1,146 @@
+<div class="container">
+    <h2>Registro de Percepciones y Deducciones</h2>
+    
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3>Percepciones</h3>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="percepcionesForm" (ngSubmit)="onSubmitPercepciones()">
+              <div class="form-group">
+                <label for="IdNominaP">Nómina</label>
+                <select id="IdNominaP" formControlName="IdNomina" class="form-control">
+                  <option value="">Seleccione una nómina</option>
+                  <option *ngFor="let nom of nominas" [value]="nom.IdNomina">
+                    {{ nom.RFC }} - {{ nom.Periodo }} ({{ nom.Fecha | date }})
+                  </option>
+                </select>
+              </div>
+  
+              <div class="form-group">
+                <label for="SueldoBase">Sueldo Base</label>
+                <input type="number" step="0.01" id="SueldoBase" formControlName="SueldoBase" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="Puntualidad">Puntualidad</label>
+                <input type="number" step="0.01" id="Puntualidad" formControlName="Puntualidad" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="ValesDespensa">Vales de Despensa</label>
+                <input type="number" step="0.01" id="ValesDespensa" formControlName="ValesDespensa" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="Compensaciones">Compensaciones</label>
+                <input type="number" step="0.01" id="Compensaciones" formControlName="Compensaciones" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="Vacaciones">Vacaciones</label>
+                <input type="number" step="0.01" id="Vacaciones" formControlName="Vacaciones" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="PrimaAntiguedad">Prima Antigüedad</label>
+                <input type="number" step="0.01" id="PrimaAntiguedad" formControlName="PrimaAntiguedad" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="OtrasPrestaciones">Otras Prestaciones</label>
+                <input type="number" step="0.01" id="OtrasPrestaciones" formControlName="OtrasPrestaciones" class="form-control">
+              </div>
+  
+              <div class="form-group total">
+                <label>Total Percepciones: {{ calcularTotalPercepciones() | currency:'MXN':'symbol':'1.2-2' }}</label>
+              </div>
+  
+              <button type="submit" class="btn btn-primary" [disabled]="percepcionesForm.invalid">
+                Registrar Percepciones
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3>Deducciones</h3>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="deduccionesForm" (ngSubmit)="onSubmitDeducciones()">
+              <div class="form-group">
+                <label for="IdNominaD">Nómina</label>
+                <select id="IdNominaD" formControlName="IdNomina" class="form-control">
+                  <option value="">Seleccione una nómina</option>
+                  <option *ngFor="let nom of nominas" [value]="nom.IdNomina">
+                    {{ nom.RFC }} - {{ nom.Periodo }} ({{ nom.Fecha | date }})
+                  </option>
+                </select>
+              </div>
+  
+              <div class="form-group">
+                <label for="ISR">ISR</label>
+                <input type="number" step="0.01" id="ISR" formControlName="ISR" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="IMSS">IMSS</label>
+                <input type="number" step="0.01" id="IMSS" formControlName="IMSS" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="INFONAVIT">INFONAVIT</label>
+                <input type="number" step="0.01" id="INFONAVIT" formControlName="INFONAVIT" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="CajaAhorro">Caja de Ahorro</label>
+                <input type="number" step="0.01" id="CajaAhorro" formControlName="CajaAhorro" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="Prestamos">Préstamos</label>
+                <input type="number" step="0.01" id="Prestamos" formControlName="Prestamos" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="FONACOT">FONACOT</label>
+                <input type="number" step="0.01" id="FONACOT" formControlName="FONACOT" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="CuotaSindical">Cuota Sindical</label>
+                <input type="number" step="0.01" id="CuotaSindical" formControlName="CuotaSindical" class="form-control">
+              </div>
+  
+              <div class="form-group">
+                <label for="Otras">Otras Deducciones</label>
+                <input type="number" step="0.01" id="Otras" formControlName="Otras" class="form-control">
+              </div>
+  
+              <div class="form-group total">
+                <label>Total Deducciones: {{ calcularTotalDeducciones() | currency:'MXN':'symbol':'1.2-2' }}</label>
+              </div>
+  
+              <button type="submit" class="btn btn-primary" [disabled]="deduccionesForm.invalid">
+                Registrar Deducciones
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
