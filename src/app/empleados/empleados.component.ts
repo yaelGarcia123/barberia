@@ -13,8 +13,9 @@ export class EmpleadosComponent implements OnInit {
   constructor(private empleadoService: RegistroService) {}
 
   ngOnInit(): void {
-    this.cargarEmpleados();
+   
   }
+
 
   cargarEmpleados(): void {
     this.empleadoService.getEmpleados().subscribe(data => {
@@ -40,4 +41,5 @@ export class EmpleadosComponent implements OnInit {
       });
     }
   }
+
 }

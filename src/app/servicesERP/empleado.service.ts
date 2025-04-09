@@ -20,8 +20,8 @@ export class RegistroService {
   }
 
   // Obtener un empleado por ID
-  obtenerEmpleadoPorId(id: number): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });
+  obtenerEmpleados(): Observable<Empleado[]> {
+    return this.http.get<Empleado[]>('https://localhost:7260/api/Empleado');
   }
 
   // Obtener todos los empleados
@@ -32,6 +32,7 @@ export class RegistroService {
   // Actualizar un empleado
   actualizarEmpleado(empleado: Empleado): Observable<any> {
     return this.http.put(`${this.apiUrl}/empleados/${empleado.IdEmpleado}`, empleado, { headers: this.headers });
+
   }
 
   // Eliminar un empleado
