@@ -1,23 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Empleado } from './empleado.model';
 
 
-export interface Empleado {
-  idEmpleado: number;
-  rfc: string;
-  tipoContrato: string;
-  nombre: string;
-  apellido: string;
-  puesto: string;
-  modoPago: string;
-  correo: string;
-  departamento: string;
-  direccion: string;
-  telefono: string;
-  fechaIngreso: string;
-  salario: number;
-}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,15 +23,15 @@ export class RegistroService {
   }
 
   // Obtener un empleado por ID
-  obtenerEmpleadoPorId(id: number): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });
+  obtenerEmpleados(): Observable<Empleado[]> {
+    return this.http.get<Empleado[]>('https://localhost:7260/api/Empleado');
   }
   getEmpleados(): Observable<Empleado[]> {
     return this.http.get<Empleado[]>(this.apiUrl);
   }
 
-  actualizarEmpleado(empleado: Empleado): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${empleado.idEmpleado}`, empleado);
+  actualizarEmpleado(IdEmpleado: number, empleado: Empleado): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${empleado.IdEmpleado}`, empleado);
   }
 
   eliminarEmpleado(id: number): Observable<any> {
