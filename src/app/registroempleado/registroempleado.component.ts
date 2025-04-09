@@ -59,7 +59,7 @@ export class RegistroempleadoComponent implements OnInit {
       const empleadoData: Empleado = this.empleadoForm.value;
       
       if (this.isEditing && this.empleado?.IdEmpleado) {
-        this.registroService.actualizarEmpleado(this.empleado.IdEmpleado, empleadoData).subscribe({
+        this.registroService.actualizarEmpleado(this.empleado).subscribe({
           next: () => {
             this.successMessage = 'Empleado actualizado exitosamente';
             this.errorMessage = '';
