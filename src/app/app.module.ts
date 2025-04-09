@@ -32,6 +32,10 @@ import { MatOptionModule } from '@angular/material/core'; // Import MatOptionMod
 
 import { RegistroempleadoComponent } from './registroempleado/registroempleado.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
+import { NominaComponent } from './nomina/nomina.component';
+import { PercepcionesDeduccionesComponent } from './percepciones-deducciones/percepciones-deducciones.component';
+import { ExportarNominaComponent } from './exportar-nomina/exportar-nomina.component';
+import { IncapacidadComponent } from './incapacidad/incapacidad.component';
 
 
 
@@ -54,7 +58,11 @@ import { EmpleadosComponent } from './empleados/empleados.component';
     ComprasComponent,
     NuevacompraComponent,
     RegistroempleadoComponent,
-    EmpleadosComponent
+    EmpleadosComponent,
+    NominaComponent,
+    PercepcionesDeduccionesComponent,
+    ExportarNominaComponent,
+    IncapacidadComponent
 
   ],
   imports: [
@@ -70,7 +78,8 @@ import { EmpleadosComponent } from './empleados/empleados.component';
     MatIconModule, // <-- Agregar esto
     MatProgressSpinnerModule,
     MatOptionModule,
-    MatSelectModule // <-- Agregado aquí
+    MatSelectModule, // <-- Agregado aquí
+    FormsModule
 
 
   ],

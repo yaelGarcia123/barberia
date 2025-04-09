@@ -1,8 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Empleado } from './empleado.model';
 
+
+export interface Empleado {
+  idEmpleado: number;
+  rfc: string;
+  tipoContrato: string;
+  nombre: string;
+  apellido: string;
+  puesto: string;
+  modoPago: string;
+  correo: string;
+  departamento: string;
+  direccion: string;
+  telefono: string;
+  fechaIngreso: string;
+  salario: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -20,21 +35,20 @@ export class RegistroService {
     return this.http.post<Empleado>(`${this.apiUrl}`, empleado, { headers: this.headers });
   }
 
-  // Obtener todos los empleados
- 
   // Obtener un empleado por ID
   obtenerEmpleadoPorId(id: number): Observable<Empleado> {
     return this.http.get<Empleado>(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });
   }
-
-  // Actualizar un empleado
-  actualizarEmpleado(id: number, empleado: Empleado): Observable<Empleado> {
-    return this.http.put<Empleado>(`${this.apiUrl}/empleados/${id}`, empleado, { headers: this.headers });
+  getEmpleados(): Observable<Empleado[]> {
+    return this.http.get<Empleado[]>(this.apiUrl);
   }
 
-  // Eliminar un empleado
+  actualizarEmpleado(empleado: Empleado): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${empleado.idEmpleado}`, empleado);
+  }
+
   eliminarEmpleado(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
   // Buscar empleados por RFC (opcional)
