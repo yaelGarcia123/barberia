@@ -1,0 +1,65 @@
+<div class="container">
+    <h2>Registro de Incapacidad</h2>
+    
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <form [formGroup]="incapacidadForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="FolioIncapacidad">Folio de Incapacidad</label>
+        <input type="text" id="FolioIncapacidad" formControlName="FolioIncapacidad" class="form-control">
+      </div>
+  
+      <div class="form-group">
+        <label for="RFC">Empleado</label>
+        <select id="RFC" formControlName="RFC" class="form-control">
+          <option value="">Seleccione un empleado</option>
+          <option *ngFor="let emp of empleados" [value]="emp.RFC">
+            {{ emp.Nombre }} {{ emp.Apellido }} ({{ emp.RFC }})
+          </option>
+        </select>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="FechaInicial">Fecha Inicial</label>
+            <input type="date" id="FechaInicial" formControlName="FechaInicial" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="FechaFinal">Fecha Final</label>
+            <input type="date" id="FechaFinal" formControlName="FechaFinal" class="form-control">
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label>Total de Días: {{ calcularDias() }}</label>
+      </div>
+  
+      <div class="form-group">
+        <label for="Motivo">Motivo</label>
+        <textarea id="Motivo" formControlName="Motivo" class="form-control" rows="3"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="Estatus">Estatus</label>
+        <select id="Estatus" formControlName="Estatus" class="form-control">
+          <option value="Activa">Activa</option>
+          <option value="Terminada">Terminada</option>
+          <option value="Cancelada">Cancelada</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="incapacidadForm.invalid">
+        Registrar Incapacidad
+      </button>
+    </form>
+  </div>

@@ -1,0 +1,115 @@
+<div class="form-container">
+    <h2>{{ isEditing ? 'Editar Empleado' : 'Registro de Empleado' }}</h2>
+    <form [formGroup]="empleadoForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="rfc">RFC:</label>
+        <input type="text" id="rfc" formControlName="RFC" required [readonly]="isEditing">
+        <div *ngIf="empleadoForm.get('RFC')?.invalid && empleadoForm.get('RFC')?.touched" class="error-message">
+          RFC es requerido y debe tener máximo 20 caracteres
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="tipoContrato">Tipo de Contrato:</label>
+        <select id="tipoContrato" formControlName="TipoContrato">
+          <option value="">Seleccione...</option>
+          <option value="Tiempo Indeterminado">Tiempo Indeterminado</option>
+          <option value="Tiempo Determinado">Tiempo Determinado</option>
+          <option value="Por Obra Determinada">Por Obra Determinada</option>
+          <option value="Honorarios">Honorarios</option>
+        </select>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" formControlName="Nombre" required>
+          <div *ngIf="empleadoForm.get('Nombre')?.invalid && empleadoForm.get('Nombre')?.touched" class="error-message">
+            Nombre es requerido
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" formControlName="Apellido" required>
+          <div *ngIf="empleadoForm.get('Apellido')?.invalid && empleadoForm.get('Apellido')?.touched" class="error-message">
+            Apellido es requerido
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="puesto">Puesto:</label>
+        <input type="text" id="puesto" formControlName="Puesto" required>
+        <div *ngIf="empleadoForm.get('Puesto')?.invalid && empleadoForm.get('Puesto')?.touched" class="error-message">
+          Puesto es requerido
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="modoPago">Modo de Pago:</label>
+        <select id="modoPago" formControlName="ModoPago">
+          <option value="">Seleccione...</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Cheque">Cheque</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" id="correo" formControlName="Correo">
+        <div *ngIf="empleadoForm.get('Correo')?.invalid && empleadoForm.get('Correo')?.touched" class="error-message">
+          Por favor ingrese un correo válido
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="departamento">Departamento:</label>
+        <input type="text" id="departamento" formControlName="Departamento">
+      </div>
+  
+      <div class="form-group">
+        <label for="direccion">Dirección:</label>
+        <textarea id="direccion" formControlName="Direccion" rows="3"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" formControlName="Telefono">
+        <div *ngIf="empleadoForm.get('Telefono')?.invalid && empleadoForm.get('Telefono')?.touched" class="error-message">
+          Teléfono no válido
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="fechaIngreso">Fecha de Ingreso:</label>
+        <input type="date" id="fechaIngreso" formControlName="FechaIngreso" required>
+        <div *ngIf="empleadoForm.get('FechaIngreso')?.invalid && empleadoForm.get('FechaIngreso')?.touched" class="error-message">
+          Fecha de ingreso es requerida
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="salario">Salario:</label>
+        <input type="number" id="salario" formControlName="Salario" step="0.01" min="0" required>
+        <div *ngIf="empleadoForm.get('Salario')?.invalid && empleadoForm.get('Salario')?.touched" class="error-message">
+          Salario debe ser un valor positivo
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button *ngIf="!isEditing" type="submit" [disabled]="empleadoForm.invalid">Guardar</button>
+        <button *ngIf="isEditing" type="submit" [disabled]="empleadoForm.invalid">Actualizar</button>
+        <button type="button" (click)="resetForm()">{{ isEditing ? 'Cancelar' : 'Limpiar' }}</button>
+      </div>
+  
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+  
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
