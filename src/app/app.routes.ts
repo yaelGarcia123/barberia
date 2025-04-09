@@ -24,7 +24,7 @@ export const routes: Routes = [
 
 
 
-    { path: '', redirectTo: 'inicio', pathMatch: 'full' }, // Redirecciona la ruta raíz a 'inicio' (opcional)
+    { path: '', redirectTo: 'registro', pathMatch: 'full' }, // Redirecciona la ruta raíz a 'inicio' (opcional)
 
 
     { path: 'inicio', component: InicioComponent },
