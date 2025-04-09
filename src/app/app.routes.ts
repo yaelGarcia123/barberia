@@ -19,6 +19,10 @@ import { NuevacompraComponent } from './nuevacompra/nuevacompra.component';
 
 import { RegistroempleadoComponent } from './registroempleado/registroempleado.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
+import { NominaComponent } from './nomina/nomina.component';
+import { PercepcionesDeduccionesComponent } from './percepciones-deducciones/percepciones-deducciones.component';
+import { ExportarNominaComponent } from './exportar-nomina/exportar-nomina.component';
+import { IncapacidadComponent } from './incapacidad/incapacidad.component';
 
 export const routes: Routes = [
 
@@ -43,7 +47,11 @@ export const routes: Routes = [
     { path: 'adminproveedores', component: AdminproveedoresComponent},
     { path: 'compras', component: ComprasComponent},
     { path: 'registro', component: RegistroempleadoComponent},
-    { path: 'empleados', component: EmpleadosComponent}
+    { path: 'empleados', component: EmpleadosComponent},
+    { path: 'nomina', component: NominaComponent},
+    { path: 'percepydedu', component : PercepcionesDeduccionesComponent},
+    { path: 'exportarnomina', component : ExportarNominaComponent},
+    { path: 'incapacidad', component : IncapacidadComponent}
 
 
 
