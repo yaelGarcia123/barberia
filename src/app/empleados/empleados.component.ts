@@ -25,6 +25,7 @@ export class EmpleadosComponent implements OnInit {
   }
 
 
+
   guardarCambios(): void {
     if (this.copia) {
       this.empleadoService.actualizarEmpleado(this.copia).subscribe(() => {
@@ -38,13 +39,18 @@ export class EmpleadosComponent implements OnInit {
   cancelar(): void {
     this.editando = null;
     this.copia = null;
+
   }
 
   eliminar(id: number): void {
     if (confirm('¿Estás seguro de eliminar este empleado?')) {
       this.empleadoService.eliminarEmpleado(id).subscribe(() => {
+
         this.obtenerEmpleados();
       });
     }
   }
 }
+
+
+

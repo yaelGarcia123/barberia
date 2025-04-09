@@ -32,6 +32,7 @@ export class RegistroService {
   // Actualizar un empleado
   actualizarEmpleado(empleado: Empleado): Observable<any> {
     return this.http.put(`${this.apiUrl}/empleados/${empleado.IdEmpleado}`, empleado, { headers: this.headers });
+
   }
 
   // Eliminar un empleado
