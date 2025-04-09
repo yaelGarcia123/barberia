@@ -7,7 +7,7 @@ import { Empleado } from './empleado.model';
   providedIn: 'root'
 })
 export class RegistroService {
-  private apiUrl = 'tu-api-url/aqui'; // Reemplaza con tu URL de API base
+  private apiUrl = 'https://localhost:7260/api/Empleado'; // Reemplaza con tu URL de API base
   private headers = new HttpHeaders({
     'Content-Type': 'application/json'
     // Agrega otros headers necesarios como Authorization si es requerido
@@ -17,14 +17,11 @@ export class RegistroService {
 
   // Crear un nuevo empleado
   registrarEmpleado(empleado: Empleado): Observable<Empleado> {
-    return this.http.post<Empleado>(`${this.apiUrl}/empleados`, empleado, { headers: this.headers });
+    return this.http.post<Empleado>(`${this.apiUrl}`, empleado, { headers: this.headers });
   }
 
   // Obtener todos los empleados
-  obtenerEmpleados(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(`${this.apiUrl}/empleados`, { headers: this.headers });
-  }
-
+ 
   // Obtener un empleado por ID
   obtenerEmpleadoPorId(id: number): Observable<Empleado> {
     return this.http.get<Empleado>(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });

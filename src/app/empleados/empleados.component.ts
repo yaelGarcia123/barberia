@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-empleados',
   templateUrl: './empleados.component.html',
-  styleUrl: './empleados.component.css'
+  styleUrls: ['./empleados.component.css']
 })
 export class EmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];
@@ -25,16 +25,20 @@ export class EmpleadosComponent implements OnInit {
     this.cargando = true;
     this.error = null;
     
-    this.http.get<Empleado[]>('URL_DE_TU_API/empleados').subscribe({
+    this.http.get<Empleado[]>('https://localhost:7260/api/Empleado').subscribe({
       next: (data) => {
+        console.log('Datos recibidos:', data); // Verifica los datos en consola
         this.empleados = data;
         this.empleadosFiltrados = [...this.empleados];
         this.cargando = false;
       },
       error: (err) => {
+        console.error('Error completo:', err); // Muestra el error completo
         this.error = 'Error al cargar los empleados. Por favor intente más tarde.';
         this.cargando = false;
-        console.error('Error al obtener empleados:', err);
+      },
+      complete: () => {
+        console.log('Petición completada'); // Para depuración
       }
     });
   }
@@ -46,26 +50,12 @@ export class EmpleadosComponent implements OnInit {
     }
 
     const termino = this.filtro.toLowerCase();
-    this.empleadosFiltrados = this.empleados.filter(emp =>
-      emp.Nombre.toLowerCase().includes(termino) ||
-      emp.Apellido.toLowerCase().includes(termino) ||
-      emp.RFC.toLowerCase().includes(termino) ||
-      emp.Puesto.toLowerCase().includes(termino) ||
-      emp.Departamento.toLowerCase().includes(termino)
+    this.empleadosFiltrados = this.empleados.filter(emp => 
+      (emp.Nombre && emp.Nombre.toLowerCase().includes(termino)) ||
+      (emp.Apellido && emp.Apellido.toLowerCase().includes(termino)) ||
+      (emp.RFC && emp.RFC.toLowerCase().includes(termino)) ||
+      (emp.Puesto && emp.Puesto.toLowerCase().includes(termino)) ||
+      (emp.Departamento && emp.Departamento.toLowerCase().includes(termino))
     );
-  }
-
-  formatearFecha(fecha: Date | string): string {
-    if (!fecha) return '';
-    
-    const fechaObj = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    return fechaObj.toLocaleDateString('es-MX');
-  }
-
-  formatearSalario(salario: number): string {
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: 'MXN'
-    }).format(salario);
   }
 }

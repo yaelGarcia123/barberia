@@ -30,6 +30,7 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
+          <th>Apellido</th>
           <th>RFC</th>
           <th>Puesto</th>
           <th>Departamento</th>
@@ -42,13 +43,14 @@
       <tbody>
         <tr *ngFor="let empleado of empleadosFiltrados">
           <td>{{ empleado.IdEmpleado }}</td>
-          <td>{{ empleado.Nombre }} {{ empleado.Apellido }}</td>
-          <td>{{ empleado.RFC }}</td>
+          <td>{{ empleado.Nombre }} </td>
+        <td> {{ empleado.Apellido }}</td> 
+        <td>{{ empleado.RFC }}</td>
           <td>{{ empleado.Puesto }}</td>
           <td>{{ empleado.Departamento }}</td>
           <td>{{ empleado.TipoContrato }}</td>
-          <td>{{ formatearFecha(empleado.FechaIngreso) }}</td>
-          <td>{{ formatearSalario(empleado.Salario) }}</td>
+          <td>{{ (empleado.FechaIngreso) }}</td>
+          <td>{{ (empleado.Salario) }}</td>
           <td class="acciones">
             <button class="btn-detalles">Detalles</button>
           </td>
