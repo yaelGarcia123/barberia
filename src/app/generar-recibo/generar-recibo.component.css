@@ -1,0 +1,38 @@
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  .recibo-preview {
+    margin-top: 30px;
+  }
+  
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .list-group-item {
+    padding: 0.75rem 1.25rem;
+  }
+  
+  .badge {
+    font-size: 0.9em;
+  }
+  
+  .text-center {
+    text-align: center;
+    padding: 50px;
+  }
+  
+  .alert {
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    margin-right: 10px;
+  }
+  
+  .btn i {
+    margin-right: 5px;
+  }

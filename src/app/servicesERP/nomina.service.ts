@@ -25,4 +25,16 @@ export class NominaService {
   obtenerDeducciones(idNomina: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${idNomina}/deducciones`);
   }
+  getEmpleados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/empleados`);
+  }
+
+  getPeriodosNomina(): Observable<string[]> {
+    // Suponiendo que tienes 24 períodos ordinarios al año (quincenales)
+    return this.http.get<string[]>(`${this.apiUrl}/periodos`);
+  }
+
+  getReciboNomina(rfc: string, periodo: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/recibo?rfc=${rfc}&periodo=${periodo}`);
+  }
 }

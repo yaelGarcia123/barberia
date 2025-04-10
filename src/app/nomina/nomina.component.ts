@@ -42,7 +42,7 @@ export class NominaComponent implements OnInit {
   }
 
   cargarEmpleados(): void {
-    this.empleadoService.getEmpleados().subscribe({
+    this.empleadoService.obtenerEmpleados().subscribe({
       next: (data) => {
         this.empleados = data;
       },

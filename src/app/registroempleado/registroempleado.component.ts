@@ -42,7 +42,7 @@ export class RegistroempleadoComponent implements OnInit {
       this.isEditing = true;
       this.empleadoForm.patchValue({
         ...this.empleado,
-        FechaIngreso: this.formatDate(this.empleado.FechaIngreso)
+        FechaIngreso: this.formatDate(this.empleado.fechaIngreso)
       });
     }
   }
@@ -58,7 +58,7 @@ export class RegistroempleadoComponent implements OnInit {
     if (this.empleadoForm.valid) {
       const empleadoData: Empleado = this.empleadoForm.value;
       
-      if (this.isEditing && this.empleado?.IdEmpleado) {
+      if (this.isEditing && this.empleado?.idEmpleado) {
         this.registroService.actualizarEmpleado(this.empleado).subscribe({
           next: () => {
             this.successMessage = 'Empleado actualizado exitosamente';
