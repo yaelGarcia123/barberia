@@ -10,6 +10,9 @@ export class NominaService {
 
   constructor(private http: HttpClient) { }
 
+  registrarNomina(nominaData: any): Observable<any> {
+    return this.http.post(this.apiUrl, nominaData);
+  }
   obtenerNominas(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }

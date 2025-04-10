@@ -1,52 +1,82 @@
-.container {
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .recibo-header {
-    text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #333;
-    padding-bottom: 20px;
-  }
-  
-  .company-info {
-    margin-top: 20px;
-  }
-  
-  .empleado-info, .percepciones, .deducciones, .resumen {
-    margin-bottom: 30px;
-  }
-  
-  table {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  th {
-    background-color: #f8f9fa;
-    text-align: left;
-  }
-  
-  .total {
-    background-color: #f8f9fa;
-    font-weight: bold;
-  }
-  
-  .resumen {
-    border-top: 2px solid #333;
-    padding-top: 20px;
-  }
-  
-  .text-center {
-    text-align: center;
-    padding: 50px;
-  }
-  
-  .alert {
-    margin: 20px auto;
-    max-width: 900px;
-  }
+/* recibo-nomina.component.css */
+.recibo-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+h2 {
+  color: #34495e;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table tr {
+  border-bottom: 1px solid #eee;
+}
+
+table td {
+  padding: 8px 0;
+}
+
+.amount {
+  text-align: right;
+}
+
+.total {
+  font-weight: bold;
+  border-top: 2px solid #333;
+}
+
+.neto {
+  text-align: center;
+  margin: 30px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.firmas {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.pdf-button {
+  display: block;
+  margin: 30px auto 0;
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pdf-button:hover {
+  background-color: #c0392b;
+}

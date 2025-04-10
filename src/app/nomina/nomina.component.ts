@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import {RegistroService} from '../servicesERP/empleado.service';
+import { NominaService } from '../servicesERP/nomina.service'; // Asegúrate de crear este servicio
 
 @Component({
   selector: 'app-nomina',
@@ -10,77 +9,96 @@ import {RegistroService} from '../servicesERP/empleado.service';
 })
 export class NominaComponent implements OnInit {
   nominaForm: FormGroup;
-  empleados: any[] = [];
-  successMessage: string = '';
-  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
-    private empleadoService: RegistroService
+    private nominaService: NominaService
   ) {
     this.nominaForm = this.fb.group({
-      RFC: ['', Validators.required],
+      // Datos básicos de nómina
+      RFC: ['', [Validators.required, Validators.maxLength(20)]],
       Fecha: ['', Validators.required],
       Periodo: ['', Validators.required],
       DiasPagados: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
-      TipoPago: ['Quincenal', Validators.required],
+      TipoPago: ['', Validators.required],
       SueldoBruto: ['', [Validators.required, Validators.min(0)]],
       TotalPercepciones: ['', [Validators.required, Validators.min(0)]],
       TotalDeducciones: ['', [Validators.required, Validators.min(0)]],
-      SueldoNeto: ['', [Validators.required, Validators.min(0)]]
+      SueldoNeto: ['', [Validators.required, Validators.min(0)]],
+
+      // Percepciones
+      percepciones: this.fb.group({
+        SueldoBase: ['', [Validators.required, Validators.min(0)]],
+        Puntualidad: ['0', [Validators.min(0)]],
+        ValesDespensa: ['0', [Validators.min(0)]],
+        Compensaciones: ['0', [Validators.min(0)]],
+        Vacaciones: ['0', [Validators.min(0)]],
+        PrimaAntiguedad: ['0', [Validators.min(0)]],
+        OtrasPrestaciones: ['0', [Validators.min(0)]]
+      }),
+
+      // Deducciones
+      deducciones: this.fb.group({
+        ISR: ['', [Validators.required, Validators.min(0)]],
+        IMSS: ['', [Validators.required, Validators.min(0)]],
+        INFONAVIT: ['0', [Validators.min(0)]],
+        CajaAhorro: ['0', [Validators.min(0)]],
+        Prestamos: ['0', [Validators.min(0)]],
+        FONACOT: ['0', [Validators.min(0)]],
+        CuotaSindical: ['0', [Validators.min(0)]],
+        Otras: ['0', [Validators.min(0)]]
+      })
     });
   }
 
   ngOnInit(): void {
-    this.cargarEmpleados();
+    // Escuchar cambios para calcular totales
+    this.nominaForm.get('percepciones')?.valueChanges.subscribe(() => this.calcularTotales());
+    this.nominaForm.get('deducciones')?.valueChanges.subscribe(() => this.calcularTotales());
+  }
+
+  calcularTotales() {
+    const percepciones = this.nominaForm.get('percepciones')?.value;
+    const deducciones = this.nominaForm.get('deducciones')?.value;
+
+    // Calcular total percepciones
+    const totalPercepciones = Object.values(percepciones).reduce((sum: number, val: any) => sum + parseFloat(val || 0), 0);
     
-    // Calcular sueldo neto cuando cambian percepciones o deducciones
-    this.nominaForm.get('TotalPercepciones')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
-    this.nominaForm.get('TotalDeducciones')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
-    this.nominaForm.get('SueldoBruto')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
-  }
-
-  cargarEmpleados(): void {
-    this.empleadoService.obtenerEmpleados().subscribe({
-      next: (data) => {
-        this.empleados = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al cargar la lista de empleados';
-        console.error(err);
-      }
-    });
-  }
-
-  calcularSueldoNeto(): void {
-    const sueldoBruto = parseFloat(this.nominaForm.get('SueldoBruto')?.value) || 0;
-    const percepciones = parseFloat(this.nominaForm.get('TotalPercepciones')?.value) || 0;
-    const deducciones = parseFloat(this.nominaForm.get('TotalDeducciones')?.value) || 0;
+    // Calcular total deducciones
+    const totalDeducciones = Object.values(deducciones).reduce((sum: number, val: any) => sum + parseFloat(val || 0), 0);
     
-    const sueldoNeto = sueldoBruto + percepciones - deducciones;
-    this.nominaForm.get('SueldoNeto')?.setValue(sueldoNeto.toFixed(2));
+    // Calcular sueldo neto
+    const sueldoBruto = parseFloat(this.nominaForm.get('SueldoBruto')?.value || 0);
+    const sueldoNeto = sueldoBruto + totalPercepciones - totalDeducciones;
+
+    // Actualizar valores en el formulario
+    this.nominaForm.patchValue({
+      TotalPercepciones: totalPercepciones.toFixed(2),
+      TotalDeducciones: totalDeducciones.toFixed(2),
+      SueldoNeto: sueldoNeto.toFixed(2)
+    }, { emitEvent: false });
   }
 
-  onSubmit(): void {
-    if (this.nominaForm.invalid) {
-      this.errorMessage = 'Por favor complete todos los campos requeridos correctamente';
-      return;
+  onSubmit() {
+    if (this.nominaForm.valid) {
+      const nominaData = {
+        ...this.nominaForm.value,
+        percepciones: this.nominaForm.get('percepciones')?.value,
+        deducciones: this.nominaForm.get('deducciones')?.value
+      };
+
+      this.nominaService.registrarNomina(nominaData).subscribe(
+        response => {
+          alert('Nómina registrada exitosamente');
+          this.nominaForm.reset();
+        },
+        error => {
+          console.error('Error al registrar nómina:', error);
+          alert('Ocurrió un error al registrar la nómina');
+        }
+      );
+    } else {
+      alert('Por favor complete todos los campos requeridos');
     }
-
-    this.http.post('URL_DE_TU_API/nominas', this.nominaForm.value).subscribe({
-      next: (response) => {
-        this.successMessage = 'Nómina registrada correctamente';
-        this.nominaForm.reset({
-          TipoPago: 'Quincenal',
-          DiasPagados: 15
-        });
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al registrar la nómina';
-        console.error(err);
-      }
-    });
   }
 }
