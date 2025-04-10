@@ -1,88 +1,54 @@
 <div class="container">
-    <h2>Registro de Nómina</h2>
-    
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
+  <h2>Nóminas</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>RFC</th>
+        <th>Fecha</th>
+        <th>Periodo</th>
+        <th>Días Pagados</th>
+        <th>Sueldo Neto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let nomina of nominas">
+        <td>{{ nomina.rfc }}</td>
+        <td>{{ nomina.fecha }}</td>
+        <td>{{ nomina.periodo }}</td>
+        <td>{{ nomina.diasPagados }}</td>
+        <td>{{ nomina.sueldoNeto | currency }}</td>
+        <td>
+          <button (click)="descargarPdf(nomina.idNomina)" class="btn btn-primary">
+            Descargar PDF
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Crear Nómina</h3>
+  <form (submit)="crearNomina()">
+    <div class="form-group">
+      <label for="rfc">RFC</label>
+      <input type="text" id="rfc" [(ngModel)]="nuevaNomina.rfc" name="rfc" class="form-control" required />
     </div>
-    
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
+    <div class="form-group">
+      <label for="periodo">Periodo</label>
+      <input type="text" id="periodo" [(ngModel)]="nuevaNomina.periodo" name="periodo" class="form-control" required />
     </div>
-  
-    <form [formGroup]="nominaForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="RFC">Empleado</label>
-        <select id="RFC" formControlName="RFC" class="form-control">
-          <option value="">Seleccione un empleado</option>
-          <option *ngFor="let emp of empleados" [value]="emp.RFC">
-            {{ emp.Nombre }} {{ emp.Apellido }} ({{ emp.RFC }})
-          </option>
-        </select>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="Fecha">Fecha</label>
-            <input type="date" id="Fecha" formControlName="Fecha" class="form-control">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="Periodo">Periodo</label>
-            <input type="text" id="Periodo" formControlName="Periodo" class="form-control" placeholder="Ej. Primera quincena de Enero">
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="DiasPagados">Días Pagados</label>
-            <input type="number" id="DiasPagados" formControlName="DiasPagados" class="form-control" min="1" max="31">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="TipoPago">Tipo de Pago</label>
-            <select id="TipoPago" formControlName="TipoPago" class="form-control">
-              <option value="Quincenal">Quincenal</option>
-              <option value="Semanal">Semanal</option>
-              <option value="Mensual">Mensual</option>
-              <option value="Catorcenal">Catorcenal</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="SueldoBruto">Sueldo Bruto</label>
-            <input type="number" step="0.01" id="SueldoBruto" formControlName="SueldoBruto" class="form-control">
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="TotalPercepciones">Total Percepciones</label>
-            <input type="number" step="0.01" id="TotalPercepciones" formControlName="TotalPercepciones" class="form-control">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="TotalDeducciones">Total Deducciones</label>
-            <input type="number" step="0.01" id="TotalDeducciones" formControlName="TotalDeducciones" class="form-control">
-          </div>
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="SueldoNeto">Sueldo Neto</label>
-        <input type="number" step="0.01" id="SueldoNeto" formControlName="SueldoNeto" class="form-control" readonly>
-      </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="nominaForm.invalid">
-        Registrar Nómina
-      </button>
-    </form>
-  </div>
+    <div class="form-group">
+      <label for="diasPagados">Días Pagados</label>
+      <input type="number" id="diasPagados" [(ngModel)]="nuevaNomina.diasPagados" name="diasPagados" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="tipoPago">Tipo de Pago</label>
+      <select id="tipoPago" [(ngModel)]="nuevaNomina.tipoPago" name="tipoPago" class="form-control" required>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Cheque">Cheque</option>
+        <option value="Efectivo">Efectivo</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success">Generar Nómina</button>
+  </form>
+</div>
