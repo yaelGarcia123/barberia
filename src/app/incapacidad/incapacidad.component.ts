@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import {RegistroService} from '../servicesERP/empleado.service';
+import { IncapacidadService } from '../servicesERP/incapacidad.service';
+import { RegistroService } from '../servicesERP/empleado.service';
 
 @Component({
   selector: 'app-incapacidad',
@@ -10,77 +10,81 @@ import {RegistroService} from '../servicesERP/empleado.service';
 })
 export class IncapacidadComponent implements OnInit {
   incapacidadForm: FormGroup;
+  mensaje = '';
   empleados: any[] = [];
-  successMessage: string = '';
-  errorMessage: string = '';
+  incapacidades: any[] = [];
+  mostrarFormulario = false;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private incapacidadService: IncapacidadService,
     private empleadoService: RegistroService
   ) {
     this.incapacidadForm = this.fb.group({
-      FolioIncapacidad: ['', [Validators.required, Validators.maxLength(20)]],
-      RFC: ['', Validators.required],
-      FechaInicial: ['', Validators.required],
-      FechaFinal: ['', Validators.required],
-      Motivo: ['', [Validators.required, Validators.maxLength(255)]],
-      Estatus: ['Activa', Validators.required]
+      folioIncapacidad: ['', [Validators.required, Validators.pattern(/^[A-Z0-9-]+$/)]],
+      rfc: ['', Validators.required],
+      fechaInicial: ['', Validators.required],
+      fechaFinal: ['', Validators.required],
+      motivo: ['', [Validators.required, Validators.minLength(10)]],
+      estatus: ['Activa']
     });
   }
 
   ngOnInit(): void {
     this.cargarEmpleados();
+    this.cargarIncapacidades();
   }
 
   cargarEmpleados(): void {
     this.empleadoService.obtenerEmpleados().subscribe({
-      next: (data) => {
-        this.empleados = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al cargar la lista de empleados';
-        console.error(err);
-      }
+      next: (data) => this.empleados = data,
+      error: (e) => console.error('Error al cargar empleados', e)
     });
   }
 
-  onSubmit(): void {
+  cargarIncapacidades(): void {
+    this.incapacidadService.obtenerIncapacidades().subscribe({
+      next: (data) => this.incapacidades = data,
+      error: (e) => console.error('Error al cargar incapacidades', e)
+    });
+  }
+
+  registrar(): void {
     if (this.incapacidadForm.invalid) {
-      this.errorMessage = 'Por favor complete todos los campos requeridos';
+      this.mensaje = 'Por favor completa todos los campos requeridos';
       return;
     }
 
-    const formData = this.incapacidadForm.value;
-    
-    // Validar que la fecha final sea mayor o igual a la inicial
-    if (new Date(formData.FechaFinal) < new Date(formData.FechaInicial)) {
-      this.errorMessage = 'La fecha final debe ser mayor o igual a la fecha inicial';
-      return;
-    }
-
-    this.http.post('URL_DE_TU_API/incapacidades', formData).subscribe({
-      next: (response) => {
-        this.successMessage = 'Incapacidad registrada correctamente';
-        this.incapacidadForm.reset({
-          Estatus: 'Activa'
-        });
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al registrar la incapacidad';
-        console.error(err);
-      }
-    });
+    this.incapacidadService.registrarIncapacidad(this.incapacidadForm.value)
+      .subscribe({
+        next: () => {
+          this.mensaje = 'Incapacidad registrada exitosamente!';
+          this.incapacidadForm.reset({ estatus: 'Activa' });
+          this.cargarIncapacidades();
+        },
+        error: (e) => {
+          console.error(e);
+          this.mensaje = 'Error al registrar incapacidad: ' + (e.error?.message || e.message);
+        }
+      });
   }
 
-  calcularDias(): number {
-    const fechaInicial = new Date(this.incapacidadForm.get('FechaInicial')?.value);
-    const fechaFinal = new Date(this.incapacidadForm.get('FechaFinal')?.value);
-    
-    if (!fechaInicial || !fechaFinal) return 0;
-    
-    const diffTime = Math.abs(fechaFinal.getTime() - fechaInicial.getTime());
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos días
+  eliminarIncapacidad(id: number): void {
+    if (confirm('¿Estás seguro de eliminar esta incapacidad?')) {
+      this.incapacidadService.eliminarIncapacidad(id).subscribe({
+        next: () => {
+          this.mensaje = 'Incapacidad eliminada correctamente';
+          this.cargarIncapacidades();
+        },
+        error: (e) => {
+          console.error(e);
+          this.mensaje = 'Error al eliminar incapacidad';
+        }
+      });
+    }
+  }
+
+  toggleFormulario(): void {
+    this.mostrarFormulario = !this.mostrarFormulario;
   }
 }

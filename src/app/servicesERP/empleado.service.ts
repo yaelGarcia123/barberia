@@ -33,7 +33,7 @@ export class RegistroService {
   // Actualizar un empleado
   actualizarEmpleado(empleado: Empleado): Observable<Empleado> {
     return this.http.put<Empleado>(
-      `${this.apiUrl}/${empleado.IdEmpleado}`, 
+      `${this.apiUrl}/${empleado.idEmpleado}`, 
       empleado, 
       { headers: this.headers }
     );

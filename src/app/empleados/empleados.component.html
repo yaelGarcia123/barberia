@@ -34,19 +34,20 @@
               </thead>
               <tbody>
                 <tr *ngFor="let emp of empleados">
-                  <td>{{ emp.IdEmpleado }}</td>
-                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Nombre"> <span *ngIf="!emp.editando">{{ emp.Nombre }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Apellido"> <span *ngIf="!emp.editando">{{ emp.Apellido }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.RFC"> <span *ngIf="!emp.editando">{{ emp.RFC }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Puesto"> <span *ngIf="!emp.editando">{{ emp.Puesto }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Departamento"> <span *ngIf="!emp.editando">{{ emp.Departamento }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" type="number" [(ngModel)]="emp.Salario"> <span *ngIf="!emp.editando">{{ emp.Salario | currency }}</span></td>
-                  <td><input *ngIf="emp.editando" class="form-control" type="date" [(ngModel)]="emp.FechaIngreso"> <span *ngIf="!emp.editando">{{ emp.FechaIngreso | date }}</span></td>
+                  <td>{{ emp.idEmpleado }}</td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.nombre"> <span *ngIf="!emp.editando">{{ emp.nombre }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.apellido"> <span *ngIf="!emp.editando">{{ emp.apellido }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.rfc"> <span *ngIf="!emp.editando">{{ emp.rfc }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.puesto"> <span *ngIf="!emp.editando">{{ emp.puesto }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.departamento"> <span *ngIf="!emp.editando">{{ emp.departamento }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" type="number" [(ngModel)]="emp.salario"> <span *ngIf="!emp.editando">{{ emp.salario | currency }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" type="date" [(ngModel)]="emp.fechaIngreso"> <span *ngIf="!emp.editando">{{ emp.fechaIngreso | date }}</span></td>
                   <td>
                     <div class="btn-group btn-group-sm">
                       <button *ngIf="!emp.editando" class="btn btn-outline-primary" (click)="iniciarEdicion(emp)">✏️ Editar</button>
-                      <button *ngIf="!emp.editando" class="btn btn-outline-danger" (click)="eliminarEmpleado(emp.IdEmpleado!)">🗑️ Eliminar</button>
-                      <button *ngIf="emp.editando" class="btn btn-success" (click)="guardarCambios(emp)">✔ Guardar</button>
+                      <button *ngIf="!emp.editando" class="btn btn-outline-danger" 
+                      (click)="emp.idEmpleado !== undefined ? eliminarEmpleado(emp.idEmpleado) : null">🗑️ Eliminar</button>
+                                        <button *ngIf="emp.editando" class="btn btn-success" (click)="guardarCambios(emp)">✔ Guardar</button>
                       <button *ngIf="emp.editando" class="btn btn-secondary" (click)="cancelarEdicion(emp)">✖ Cancelar</button>
                     </div>
                   </td>

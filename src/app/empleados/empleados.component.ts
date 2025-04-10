@@ -56,11 +56,11 @@ export class EmpleadosComponent implements OnInit {
   }
 
   guardarCambios(empleado: EmpleadoParaEdicion): void {
-    if (!empleado.IdEmpleado) return;
+    if (!empleado.idEmpleado) return;
 
     this.empleadoService.actualizarEmpleado(empleado).subscribe({
       next: (empleadoActualizado) => {
-        const index = this.empleados.findIndex(e => e.IdEmpleado === empleado.IdEmpleado);
+        const index = this.empleados.findIndex(e => e.idEmpleado === empleado.idEmpleado);
         if (index !== -1) {
           this.empleados[index] = {
             ...empleadoActualizado,
@@ -81,7 +81,7 @@ export class EmpleadosComponent implements OnInit {
     if (confirm('¿Estás seguro de eliminar este empleado?')) {
       this.empleadoService.eliminarEmpleado(id).subscribe({
         next: () => {
-          this.empleados = this.empleados.filter(e => e.IdEmpleado !== id);
+          this.empleados = this.empleados.filter(e => e.idEmpleado !== id);
         },
         error: (err) => {
           console.error('Error al eliminar empleado:', err);

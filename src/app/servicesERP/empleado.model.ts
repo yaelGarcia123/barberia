@@ -1,15 +1,15 @@
 export interface Empleado {
-    IdEmpleado?: number;
-    RFC: string;
-    TipoContrato: string;
-    Nombre: string;
-    Apellido: string;
-    Puesto: string;
-    ModoPago: string;
-    Correo: string;
-    Departamento: string;
-    Direccion: string;
-    Telefono: string;
-    FechaIngreso:  Date;
-    Salario: number;
-  }
+  idEmpleado?: number;
+  rfc: string;
+  tipocontrato: string;
+  nombre: string;
+  apellido: string;
+  puesto: string;
+  modopago: string;
+  correo: string;
+  departamento: string;
+  direccion: string;
+  telefono: string;
+  fechaIngreso: Date;
+  salario: number;
+}
