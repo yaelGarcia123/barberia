@@ -1,2 +1,87 @@
-<h1>hola</h1>
-<h1>dd</h1>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Lista de Empleados</h3>
+        <button class="btn btn-light btn-sm" (click)="cargarEmpleados()">Recargar</button>
+      </div>
+      
+      <div class="card-body">
+        <div *ngIf="isLoading" class="text-center my-4">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2">Cargando empleados...</p>
+        </div>
+        
+        <div *ngIf="errorMessage" class="alert alert-danger d-flex justify-content-between">
+          {{ errorMessage }}
+          <button class="btn btn-outline-danger btn-sm" (click)="cargarEmpleados()">Reintentar</button>
+        </div>
+        
+        <div *ngIf="!isLoading && !errorMessage">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-dark sticky-top">
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>RFC</th>
+                  <th>Puesto</th>
+                  <th>Departamento</th>
+                  <th>Salario</th>
+                  <th>Fecha Ingreso</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let emp of empleados">
+                  <td>{{ emp.IdEmpleado }}</td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Nombre"> <span *ngIf="!emp.editando">{{ emp.Nombre }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Apellido"> <span *ngIf="!emp.editando">{{ emp.Apellido }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.RFC"> <span *ngIf="!emp.editando">{{ emp.RFC }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Puesto"> <span *ngIf="!emp.editando">{{ emp.Puesto }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" [(ngModel)]="emp.Departamento"> <span *ngIf="!emp.editando">{{ emp.Departamento }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" type="number" [(ngModel)]="emp.Salario"> <span *ngIf="!emp.editando">{{ emp.Salario | currency }}</span></td>
+                  <td><input *ngIf="emp.editando" class="form-control" type="date" [(ngModel)]="emp.FechaIngreso"> <span *ngIf="!emp.editando">{{ emp.FechaIngreso | date }}</span></td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <button *ngIf="!emp.editando" class="btn btn-outline-primary" (click)="iniciarEdicion(emp)">✏️ Editar</button>
+                      <button *ngIf="!emp.editando" class="btn btn-outline-danger" (click)="eliminarEmpleado(emp.IdEmpleado!)">🗑️ Eliminar</button>
+                      <button *ngIf="emp.editando" class="btn btn-success" (click)="guardarCambios(emp)">✔ Guardar</button>
+                      <button *ngIf="emp.editando" class="btn btn-secondary" (click)="cancelarEdicion(emp)">✖ Cancelar</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="empleados.length === 0" class="alert alert-info text-center mt-3">
+            No hay empleados registrados.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .table-responsive {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .table thead th {
+      position: sticky;
+      top: 0;
+      background-color: #343a40;
+      color: white;
+      z-index: 10;
+    }
+    .table th, .table td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .form-control {
+      min-width: 120px;
+    }
+    .btn-group .btn {
+      min-width: 80px;
+    }
+    </style>
+    

@@ -10,6 +10,6 @@ export interface Empleado {
     Departamento: string;
     Direccion: string;
     Telefono: string;
-    FechaIngreso: string | Date;
+    FechaIngreso:  Date;
     Salario: number;
   }

@@ -7,7 +7,7 @@ import { Empleado } from './empleado.model';
   providedIn: 'root'
 })
 export class RegistroService {
-  private apiUrl = 'tu-api-url/aqui'; // Reemplaza con tu URL de API base
+  private apiUrl = 'https://localhost:7260/api/Empleado'; // Reemplaza con tu URL de API base
   private headers = new HttpHeaders({
     'Content-Type': 'application/json'
   });
@@ -16,30 +16,33 @@ export class RegistroService {
 
   // Crear un nuevo empleado
   registrarEmpleado(empleado: Empleado): Observable<Empleado> {
-    return this.http.post<Empleado>(`${this.apiUrl}/empleados`, empleado, { headers: this.headers });
+    return this.http.post<Empleado>(
+      this.apiUrl, 
+      empleado, 
+      { headers: this.headers }
+    );
   }
 
-  // Obtener un empleado por ID
-  obtenerEmpleados(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>('https://localhost:7260/api/Empleado');
-  }
+ 
 
   // Obtener todos los empleados
-  getEmpleados(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(`${this.apiUrl}/empleados`);
+  obtenerEmpleados(): Observable<Empleado[]> {
+    return this.http.get<Empleado[]>(this.apiUrl, { headers: this.headers });
   }
 
   // Actualizar un empleado
-  actualizarEmpleado(empleado: Empleado): Observable<any> {
-    return this.http.put(`${this.apiUrl}/empleados/${empleado.IdEmpleado}`, empleado, { headers: this.headers });
-
+  actualizarEmpleado(empleado: Empleado): Observable<Empleado> {
+    return this.http.put<Empleado>(
+      `${this.apiUrl}/${empleado.IdEmpleado}`, 
+      empleado, 
+      { headers: this.headers }
+    );
   }
 
   // Eliminar un empleado
-  eliminarEmpleado(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/empleados/${id}`, { headers: this.headers });
+  eliminarEmpleado(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.headers });
   }
-
   // Buscar empleados por RFC
   buscarPorRFC(rfc: string): Observable<Empleado[]> {
     return this.http.get<Empleado[]>(`${this.apiUrl}/empleados?rfc=${rfc}`, { headers: this.headers });
