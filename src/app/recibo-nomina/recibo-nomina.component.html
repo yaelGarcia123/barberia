@@ -1,0 +1,146 @@
+<div class="container" *ngIf="!loading && !error && recibo">
+    <div class="recibo-header">
+      <h2>Recibo de Nómina</h2>
+      <div class="company-info">
+        <p>Nombre de la Empresa</p>
+        <p>Dirección de la Empresa</p>
+        <p>RFC de la Empresa</p>
+      </div>
+    </div>
+  
+    <div class="empleado-info">
+      <h3>Datos del Empleado</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>RFC:</strong> {{ recibo.empleado.RFC }}</p>
+          <p><strong>Nombre:</strong> {{ recibo.empleado.Nombre }} {{ recibo.empleado.Apellido }}</p>
+          <p><strong>Puesto:</strong> {{ recibo.empleado.Puesto }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Fecha:</strong> {{ recibo.nomina.Fecha | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Periodo:</strong> {{ recibo.nomina.Periodo }}</p>
+          <p><strong>Días pagados:</strong> {{ recibo.nomina.DiasPagados }}</p>
+          <p><strong>Tipo de pago:</strong> {{ recibo.nomina.TipoPago }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="percepciones">
+      <h3>Percepciones</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sueldo Base</td>
+            <td>{{ recibo.percepciones.SueldoBase | currency }}</td>
+          </tr>
+          <tr>
+            <td>Puntualidad</td>
+            <td>{{ recibo.percepciones.Puntualidad | currency }}</td>
+          </tr>
+          <tr>
+            <td>Vales de Despensa</td>
+            <td>{{ recibo.percepciones.ValesDespensa | currency }}</td>
+          </tr>
+          <tr>
+            <td>Compensaciones</td>
+            <td>{{ recibo.percepciones.Compensaciones | currency }}</td>
+          </tr>
+          <tr>
+            <td>Vacaciones</td>
+            <td>{{ recibo.percepciones.Vacaciones | currency }}</td>
+          </tr>
+          <tr>
+            <td>Prima Antigüedad</td>
+            <td>{{ recibo.percepciones.PrimaAntiguedad | currency }}</td>
+          </tr>
+          <tr>
+            <td>Otras Prestaciones</td>
+            <td>{{ recibo.percepciones.OtrasPrestaciones | currency }}</td>
+          </tr>
+          <tr class="total">
+            <td><strong>Total Percepciones</strong></td>
+            <td><strong>{{ calcularTotalPercepciones() | currency }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="deducciones">
+      <h3>Deducciones</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Importe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ISR (ISPT)</td>
+            <td>{{ recibo.deducciones.ISR | currency }}</td>
+          </tr>
+          <tr>
+            <td>IMSS</td>
+            <td>{{ recibo.deducciones.IMSS | currency }}</td>
+          </tr>
+          <tr>
+            <td>INFONAVIT</td>
+            <td>{{ recibo.deducciones.INFONAVIT | currency }}</td>
+          </tr>
+          <tr>
+            <td>Caja de Ahorro</td>
+            <td>{{ recibo.deducciones.CajaAhorro | currency }}</td>
+          </tr>
+          <tr>
+            <td>Préstamos</td>
+            <td>{{ recibo.deducciones.Prestamos | currency }}</td>
+          </tr>
+          <tr>
+            <td>FONACOT</td>
+            <td>{{ recibo.deducciones.FONACOT | currency }}</td>
+          </tr>
+          <tr>
+            <td>Cuota Sindical</td>
+            <td>{{ recibo.deducciones.CuotaSindical | currency }}</td>
+          </tr>
+          <tr>
+            <td>Otras Deducciones</td>
+            <td>{{ recibo.deducciones.Otras | currency }}</td>
+          </tr>
+          <tr class="total">
+            <td><strong>Total Deducciones</strong></td>
+            <td><strong>{{ calcularTotalDeducciones() | currency }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="resumen">
+      <h3>Resumen</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Sueldo Bruto:</strong> {{ recibo.nomina.SueldoBruto | currency }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Sueldo Neto:</strong> {{ recibo.nomina.SueldoNeto | currency }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando recibo de nómina...</p>
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
