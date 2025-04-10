@@ -1,65 +1,113 @@
 <div class="container">
-    <h2>Registro de Incapacidad</h2>
-    
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-    
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
+  <h2>Gestión de Incapacidades</h2>
   
-    <form [formGroup]="incapacidadForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="FolioIncapacidad">Folio de Incapacidad</label>
-        <input type="text" id="FolioIncapacidad" formControlName="FolioIncapacidad" class="form-control">
-      </div>
-  
-      <div class="form-group">
-        <label for="RFC">Empleado</label>
-        <select id="RFC" formControlName="RFC" class="form-control">
-          <option value="">Seleccione un empleado</option>
-          <option *ngFor="let emp of empleados" [value]="emp.RFC">
-            {{ emp.Nombre }} {{ emp.Apellido }} ({{ emp.RFC }})
-          </option>
-        </select>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="FechaInicial">Fecha Inicial</label>
-            <input type="date" id="FechaInicial" formControlName="FechaInicial" class="form-control">
+  <button (click)="toggleFormulario()" class="btn btn-primary mb-3">
+    {{ mostrarFormulario ? 'Ocultar formulario' : 'Nueva Incapacidad' }}
+  </button>
+
+  <div *ngIf="mostrarFormulario" class="card mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Registrar Incapacidad</h3>
+      <form [formGroup]="incapacidadForm" (ngSubmit)="registrar()">
+        <div class="mb-3">
+          <label class="form-label">Folio:</label>
+          <input formControlName="folioIncapacidad" type="text" class="form-control" />
+          <div *ngIf="incapacidadForm.get('folioIncapacidad')?.invalid && incapacidadForm.get('folioIncapacidad')?.touched"
+               class="text-danger">
+            Folio es requerido (solo letras mayúsculas, números y guiones)
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="FechaFinal">Fecha Final</label>
-            <input type="date" id="FechaFinal" formControlName="FechaFinal" class="form-control">
+
+        <div class="mb-3">
+          <label class="form-label">Empleado:</label>
+          <select formControlName="rfc" class="form-select">
+            <option value="">Seleccione un empleado</option>
+            <option *ngFor="let empleado of empleados" [value]="empleado.rfc">
+              {{ empleado.rfc }} - {{ empleado.nombre }} {{ empleado.apellido }}
+            </option>
+          </select>
+          <div *ngIf="incapacidadForm.get('rfc')?.invalid && incapacidadForm.get('rfc')?.touched"
+               class="text-danger">
+            Seleccione un empleado
           </div>
         </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha inicial:</label>
+          <input formControlName="fechaInicial" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha final:</label>
+          <input formControlName="fechaFinal" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Motivo:</label>
+          <textarea formControlName="motivo" class="form-control" rows="3"></textarea>
+          <div *ngIf="incapacidadForm.get('motivo')?.invalid && incapacidadForm.get('motivo')?.touched"
+               class="text-danger">
+            Motivo es requerido (mínimo 10 caracteres)
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Estatus:</label>
+          <select formControlName="estatus" class="form-select">
+            <option value="Activa">Activa</option>
+            <option value="Cancelada">Cancelada</option>
+            <option value="Procesada">Procesada</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-success" [disabled]="incapacidadForm.invalid">
+          Registrar
+        </button>
+      </form>
+
+      <div *ngIf="mensaje" class="alert mt-3" [ngClass]="{'alert-success': mensaje.includes('éxito'), 'alert-danger': !mensaje.includes('éxito')}">
+        {{ mensaje }}
       </div>
-  
-      <div class="form-group">
-        <label>Total de Días: {{ calcularDias() }}</label>
-      </div>
-  
-      <div class="form-group">
-        <label for="Motivo">Motivo</label>
-        <textarea id="Motivo" formControlName="Motivo" class="form-control" rows="3"></textarea>
-      </div>
-  
-      <div class="form-group">
-        <label for="Estatus">Estatus</label>
-        <select id="Estatus" formControlName="Estatus" class="form-control">
-          <option value="Activa">Activa</option>
-          <option value="Terminada">Terminada</option>
-          <option value="Cancelada">Cancelada</option>
-        </select>
-      </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="incapacidadForm.invalid">
-        Registrar Incapacidad
-      </button>
-    </form>
+    </div>
   </div>
+
+  <h3>Listado de Incapacidades</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Folio</th>
+        <th>Empleado</th>
+        <th>Fecha Inicial</th>
+        <th>Fecha Final</th>
+        <th>Días</th>
+        <th>Motivo</th>
+        <th>Estatus</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let inc of incapacidades">
+        <td>{{ inc.folioIncapacidad }}</td>
+        <td>{{ inc.empleado?.nombre }} {{ inc.empleado?.apellido }} ({{ inc.rfc }})</td>
+        <td>{{ inc.fechaInicial | date:'dd/MM/yyyy' }}</td>
+        <td>{{ inc.fechaFinal | date:'dd/MM/yyyy' }}</td>
+        <td>{{ inc.totalDias }}</td>
+        <td>{{ inc.motivo }}</td>
+        <td>
+          <span [ngClass]="{
+            'badge bg-success': inc.estatus === 'Activa',
+            'badge bg-warning': inc.estatus === 'Procesada',
+            'badge bg-danger': inc.estatus === 'Cancelada'
+          }">
+            {{ inc.estatus }}
+          </span>
+        </td>
+        <td>
+          <button (click)="eliminarIncapacidad(inc.idIncapacidad)" class="btn btn-danger btn-sm">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
