@@ -1,88 +1,48 @@
 <div class="container">
-    <h2>Registro de Nómina</h2>
-    
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-    
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-  
-    <form [formGroup]="nominaForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="RFC">Empleado</label>
-        <select id="RFC" formControlName="RFC" class="form-control">
-          <option value="">Seleccione un empleado</option>
-          <option *ngFor="let emp of empleados" [value]="emp.RFC">
-            {{ emp.Nombre }} {{ emp.Apellido }} ({{ emp.RFC }})
-          </option>
-        </select>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="Fecha">Fecha</label>
-            <input type="date" id="Fecha" formControlName="Fecha" class="form-control">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="Periodo">Periodo</label>
-            <input type="text" id="Periodo" formControlName="Periodo" class="form-control" placeholder="Ej. Primera quincena de Enero">
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="DiasPagados">Días Pagados</label>
-            <input type="number" id="DiasPagados" formControlName="DiasPagados" class="form-control" min="1" max="31">
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="TipoPago">Tipo de Pago</label>
-            <select id="TipoPago" formControlName="TipoPago" class="form-control">
-              <option value="Quincenal">Quincenal</option>
-              <option value="Semanal">Semanal</option>
-              <option value="Mensual">Mensual</option>
-              <option value="Catorcenal">Catorcenal</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="SueldoBruto">Sueldo Bruto</label>
-            <input type="number" step="0.01" id="SueldoBruto" formControlName="SueldoBruto" class="form-control">
-          </div>
-        </div>
-      </div>
-  
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="TotalPercepciones">Total Percepciones</label>
-            <input type="number" step="0.01" id="TotalPercepciones" formControlName="TotalPercepciones" class="form-control">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="TotalDeducciones">Total Deducciones</label>
-            <input type="number" step="0.01" id="TotalDeducciones" formControlName="TotalDeducciones" class="form-control">
-          </div>
-        </div>
-      </div>
-  
-      <div class="form-group">
-        <label for="SueldoNeto">Sueldo Neto</label>
-        <input type="number" step="0.01" id="SueldoNeto" formControlName="SueldoNeto" class="form-control" readonly>
-      </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="nominaForm.invalid">
-        Registrar Nómina
-      </button>
-    </form>
-  </div>
+  <h2>Gestión de Nóminas</h2>
+
+  <!-- Selección del empleado -->
+  <label for="empleado">Seleccionar Empleado:</label>
+  <select [(ngModel)]="empleadoSeleccionado" class="form-control mb-2">
+    <option [value]="null" disabled selected>-- Selecciona un empleado --</option>
+    <option *ngFor="let empleado of empleados" [value]="empleado.idEmpleado">
+      {{ empleado.nombre }} {{ empleado.apellido }}
+    </option>
+  </select>
+
+  <button (click)="generarNomina()" class="btn btn-primary mb-3">Generar Nómina</button>
+
+  <hr>
+
+  <h3>Listado de Nóminas</h3>
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>RFC</th>
+        <th>Fecha</th>
+        <th>Periodo</th>
+        <th>Sueldo Bruto</th>
+        <th>Percepciones</th>
+        <th>Deducciones</th>
+        <th>Sueldo Neto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let nomina of nominas">
+        <td>{{ nomina.rfc }}</td>
+        <td>{{ nomina.fecha | date:'shortDate' }}</td>
+        <td>{{ nomina.periodo }}</td>
+        <td>{{ nomina.sueldoBruto | currency }}</td>
+        <td>{{ nomina.totalPercepciones | currency }}</td>
+        <td>{{ nomina.totalDeducciones | currency }}</td>
+        <td>{{ nomina.sueldoNeto | currency }}</td>
+        <td>
+          <button (click)="descargarRecibo(nomina.idNomina)" class="btn btn-success btn-sm">
+            Descargar Recibo
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

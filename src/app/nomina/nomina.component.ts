@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NominaService, Nomina } from '../servicesERP/nomina.service';
 import { HttpClient } from '@angular/common/http';
-import {RegistroService} from '../servicesERP/empleado.service';
+import { Empleado } from '../servicesERP/empleado.model';
 
 @Component({
   selector: 'app-nomina',
@@ -9,78 +9,49 @@ import {RegistroService} from '../servicesERP/empleado.service';
   styleUrls: ['./nomina.component.css']
 })
 export class NominaComponent implements OnInit {
-  nominaForm: FormGroup;
-  empleados: any[] = [];
-  successMessage: string = '';
-  errorMessage: string = '';
+  empleados: Empleado[] = [];
+  nominas: Nomina[] = [];
+  empleadoSeleccionado: number | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private empleadoService: RegistroService
-  ) {
-    this.nominaForm = this.fb.group({
-      RFC: ['', Validators.required],
-      Fecha: ['', Validators.required],
-      Periodo: ['', Validators.required],
-      DiasPagados: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
-      TipoPago: ['Quincenal', Validators.required],
-      SueldoBruto: ['', [Validators.required, Validators.min(0)]],
-      TotalPercepciones: ['', [Validators.required, Validators.min(0)]],
-      TotalDeducciones: ['', [Validators.required, Validators.min(0)]],
-      SueldoNeto: ['', [Validators.required, Validators.min(0)]]
-    });
-  }
+  constructor(private nominaService: NominaService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.cargarEmpleados();
-    
-    // Calcular sueldo neto cuando cambian percepciones o deducciones
-    this.nominaForm.get('TotalPercepciones')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
-    this.nominaForm.get('TotalDeducciones')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
-    this.nominaForm.get('SueldoBruto')?.valueChanges.subscribe(() => this.calcularSueldoNeto());
+    this.cargarNominas();
   }
 
-  cargarEmpleados(): void {
-    this.empleadoService.obtenerEmpleados().subscribe({
-      next: (data) => {
-        this.empleados = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al cargar la lista de empleados';
-        console.error(err);
-      }
+  cargarEmpleados() {
+    this.http.get<Empleado[]>('https://localhost:7260/api/Empleado').subscribe(data => {
+      this.empleados = data;
     });
   }
 
-  calcularSueldoNeto(): void {
-    const sueldoBruto = parseFloat(this.nominaForm.get('SueldoBruto')?.value) || 0;
-    const percepciones = parseFloat(this.nominaForm.get('TotalPercepciones')?.value) || 0;
-    const deducciones = parseFloat(this.nominaForm.get('TotalDeducciones')?.value) || 0;
-    
-    const sueldoNeto = sueldoBruto + percepciones - deducciones;
-    this.nominaForm.get('SueldoNeto')?.setValue(sueldoNeto.toFixed(2));
+  cargarNominas() {
+    this.nominaService.obtenerNominas().subscribe(data => {
+      this.nominas = data;
+    });
   }
 
-  onSubmit(): void {
-    if (this.nominaForm.invalid) {
-      this.errorMessage = 'Por favor complete todos los campos requeridos correctamente';
-      return;
+  generarNomina() {
+    if (this.empleadoSeleccionado) {
+      this.nominaService.generarNomina(this.empleadoSeleccionado).subscribe(() => {
+        alert('Nómina generada con éxito');
+        this.cargarNominas(); // Recarga la tabla
+      }, error => {
+        alert('Error al generar la nómina');
+      });
+    } else {
+      alert('Selecciona un empleado');
     }
+  }
 
-    this.http.post('URL_DE_TU_API/nominas', this.nominaForm.value).subscribe({
-      next: (response) => {
-        this.successMessage = 'Nómina registrada correctamente';
-        this.nominaForm.reset({
-          TipoPago: 'Quincenal',
-          DiasPagados: 15
-        });
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Error al registrar la nómina';
-        console.error(err);
-      }
+  descargarRecibo(nominaId: number) {
+    this.nominaService.descargarRecibo(nominaId).subscribe(response => {
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    }, error => {
+      alert('Error al descargar el recibo de nómina');
     });
   }
 }

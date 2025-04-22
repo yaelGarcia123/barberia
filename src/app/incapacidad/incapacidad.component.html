@@ -14,32 +14,45 @@
           <input formControlName="folioIncapacidad" type="text" class="form-control" />
           <div *ngIf="incapacidadForm.get('folioIncapacidad')?.invalid && incapacidadForm.get('folioIncapacidad')?.touched"
                class="text-danger">
-            Folio es requerido (solo letras mayúsculas, números y guiones)
+            <span *ngIf="incapacidadForm.get('folioIncapacidad')?.errors?.['required']">
+              Folio es requerido
+            </span>
+            <span *ngIf="incapacidadForm.get('folioIncapacidad')?.errors?.['pattern']">
+              Solo letras mayúsculas, números y guiones permitidos
+            </span>
           </div>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Empleado:</label>
-          <select formControlName="rfc" class="form-select">
-            <option value="">Seleccione un empleado</option>
-            <option *ngFor="let empleado of empleados" [value]="empleado.rfc">
-              {{ empleado.rfc }} - {{ empleado.nombre }} {{ empleado.apellido }}
-            </option>
-          </select>
+         <!-- <option value="">Seleccione un empleado</option>
+<option *ngFor="let empleado of empleados" [value]="empleado.rfc"> 
+  {{ empleado.rfc }} - {{ empleado.nombre }} {{ empleado.apellido }} 
+</option> -->
+
           <div *ngIf="incapacidadForm.get('rfc')?.invalid && incapacidadForm.get('rfc')?.touched"
                class="text-danger">
             Seleccione un empleado
           </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Fecha inicial:</label>
-          <input formControlName="fechaInicial" type="date" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Fecha final:</label>
-          <input formControlName="fechaFinal" type="date" class="form-control" />
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Fecha inicial:</label>
+            <input formControlName="fechaInicial" type="date" class="form-control" />
+            <div *ngIf="incapacidadForm.get('fechaInicial')?.invalid && incapacidadForm.get('fechaInicial')?.touched"
+                 class="text-danger">
+              Fecha inicial es requerida
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Fecha final:</label>
+            <input formControlName="fechaFinal" type="date" class="form-control" />
+            <div *ngIf="incapacidadForm.get('fechaFinal')?.invalid && incapacidadForm.get('fechaFinal')?.touched"
+                 class="text-danger">
+              Fecha final es requerida
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -47,7 +60,12 @@
           <textarea formControlName="motivo" class="form-control" rows="3"></textarea>
           <div *ngIf="incapacidadForm.get('motivo')?.invalid && incapacidadForm.get('motivo')?.touched"
                class="text-danger">
-            Motivo es requerido (mínimo 10 caracteres)
+            <span *ngIf="incapacidadForm.get('motivo')?.errors?.['required']">
+              Motivo es requerido
+            </span>
+            <span *ngIf="incapacidadForm.get('motivo')?.errors?.['minlength']">
+              Mínimo 10 caracteres requeridos
+            </span>
           </div>
         </div>
 
@@ -65,14 +83,20 @@
         </button>
       </form>
 
-      <div *ngIf="mensaje" class="alert mt-3" [ngClass]="{'alert-success': mensaje.includes('éxito'), 'alert-danger': !mensaje.includes('éxito')}">
+      <div *ngIf="mensaje" class="alert mt-3" 
+           [ngClass]="{'alert-success': mensaje.includes('éxito') || mensaje.includes('correctamente'), 
+                      'alert-danger': !(mensaje.includes('éxito') || mensaje.includes('correctamente'))}">
         {{ mensaje }}
       </div>
     </div>
   </div>
 
   <h3>Listado de Incapacidades</h3>
-  <table class="table table-striped">
+  <div *ngIf="incapacidades.length === 0" class="alert alert-info">
+    No hay incapacidades registradas
+  </div>
+  
+  <table *ngIf="incapacidades.length > 0" class="table table-striped">
     <thead>
       <tr>
         <th>Folio</th>
