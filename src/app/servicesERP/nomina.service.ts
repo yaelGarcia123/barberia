@@ -21,6 +21,7 @@ export class NominaService {
 
   constructor(private http: HttpClient) {}
 
+
   generarNomina(empleadoId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${empleadoId}`, {}); // sin body
   }
@@ -33,4 +34,8 @@ export class NominaService {
   descargarRecibo(nominaId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/recibo/${nominaId}`, { responseType: 'blob' });
   }
+
 }
+
+
+
