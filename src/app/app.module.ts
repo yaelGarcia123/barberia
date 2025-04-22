@@ -66,8 +66,7 @@ import { GenerarReciboComponent } from './generar-recibo/generar-recibo.componen
     ExportarNominaComponent,
     IncapacidadComponent,
     ReciboNominaComponent,
-    GenerarReciboComponent,
-    ReciboNominaComponent
+    GenerarReciboComponent
 
   ],
   imports: [

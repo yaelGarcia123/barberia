@@ -55,8 +55,7 @@ export const routes: Routes = [
     { path: 'exportarnomina', component : ExportarNominaComponent},
     { path: 'incapacidad', component : IncapacidadComponent},
     { path: 'recibonomina', component : ReciboNominaComponent},
-    { path: 'generarecibo', component : GenerarReciboComponent},
-    { path: 'recibonomina', component : ReciboNominaComponent}
+    { path: 'generarecibo', component : GenerarReciboComponent}
 
 
 
