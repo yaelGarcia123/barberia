@@ -37,7 +37,7 @@ import { PercepcionesDeduccionesComponent } from './percepciones-deducciones/per
 import { ExportarNominaComponent } from './exportar-nomina/exportar-nomina.component';
 import { IncapacidadComponent } from './incapacidad/incapacidad.component';
 import { ReciboNominaComponent } from './recibo-nomina/recibo-nomina.component';
-import { GenerarReciboComponent } from './generar-recibo/generar-recibo.component';
+
 
 
 
@@ -65,8 +65,7 @@ import { GenerarReciboComponent } from './generar-recibo/generar-recibo.componen
     PercepcionesDeduccionesComponent,
     ExportarNominaComponent,
     IncapacidadComponent,
-    ReciboNominaComponent,
-    GenerarReciboComponent
+    ReciboNominaComponent
 
   ],
   imports: [

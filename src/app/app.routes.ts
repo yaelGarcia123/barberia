@@ -24,7 +24,7 @@ import { PercepcionesDeduccionesComponent } from './percepciones-deducciones/per
 import { ExportarNominaComponent } from './exportar-nomina/exportar-nomina.component';
 import { IncapacidadComponent } from './incapacidad/incapacidad.component';
 import { ReciboNominaComponent } from './recibo-nomina/recibo-nomina.component';
-import { GenerarReciboComponent } from './generar-recibo/generar-recibo.component';
+
 
 export const routes: Routes = [
 
@@ -54,8 +54,7 @@ export const routes: Routes = [
     { path: 'percepydedu', component : PercepcionesDeduccionesComponent},
     { path: 'exportarnomina', component : ExportarNominaComponent},
     { path: 'incapacidad', component : IncapacidadComponent},
-    { path: 'recibonomina', component : ReciboNominaComponent},
-    { path: 'generarecibo', component : GenerarReciboComponent}
+    { path: 'recibonomina', component : ReciboNominaComponent}
 
 
 
