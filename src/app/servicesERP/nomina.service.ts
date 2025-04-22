@@ -33,7 +33,7 @@ export class NominaService {
   descargarRecibo(nominaId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/recibo/${nominaId}`, { responseType: 'blob' });
   }
-<<<<<<< HEAD
+
 
   obtenerPercepciones(idNomina: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${idNomina}/percepciones`);
@@ -55,6 +55,6 @@ export class NominaService {
     return this.http.get(`${this.apiUrl}/recibo?rfc=${rfc}&periodo=${periodo}`);
   }
 }
-=======
-}
->>>>>>> 7f850bee629bab70b7710572a74aedb5fa8a5dcc
+
+
+
