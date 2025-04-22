@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NominaService, Nomina, NominaRequest } from '../servicesERP/nomina.service';
+import { NominaService, Nomina } from '../servicesERP/nomina.service';
+import { HttpClient } from '@angular/common/http';
+import { Empleado } from '../servicesERP/empleado.model';
 
 @Component({
   selector: 'app-nomina',
@@ -7,38 +9,49 @@ import { NominaService, Nomina, NominaRequest } from '../servicesERP/nomina.serv
   styleUrls: ['./nomina.component.css']
 })
 export class NominaComponent implements OnInit {
+  empleados: Empleado[] = [];
   nominas: Nomina[] = [];
-  nuevaNomina: NominaRequest = {
-    rfc: '',
-    periodo: '',
-    diasPagados: 0,
-    tipoPago: ''
-  };
+  empleadoSeleccionado: number | null = null;
 
-  constructor(private nominaService: NominaService) {}
+  constructor(private nominaService: NominaService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.obtenerNominas();
+    this.cargarEmpleados();
+    this.cargarNominas();
   }
 
-  obtenerNominas(): void {
+  cargarEmpleados() {
+    this.http.get<Empleado[]>('https://localhost:7260/api/Empleado').subscribe(data => {
+      this.empleados = data;
+    });
+  }
+
+  cargarNominas() {
     this.nominaService.obtenerNominas().subscribe(data => {
       this.nominas = data;
     });
   }
 
-  crearNomina(): void {
-    this.nominaService.crearNomina(this.nuevaNomina).subscribe(() => {
-      this.obtenerNominas();
-      alert('Nómina creada correctamente');
-    });
+  generarNomina() {
+    if (this.empleadoSeleccionado) {
+      this.nominaService.generarNomina(this.empleadoSeleccionado).subscribe(() => {
+        alert('Nómina generada con éxito');
+        this.cargarNominas(); // Recarga la tabla
+      }, error => {
+        alert('Error al generar la nómina');
+      });
+    } else {
+      alert('Selecciona un empleado');
+    }
   }
 
-  descargarPdf(id: number): void {
-    this.nominaService.generarPdf(id).subscribe(pdf => {
-      const blob = new Blob([pdf], { type: 'application/pdf' });
+  descargarRecibo(nominaId: number) {
+    this.nominaService.descargarRecibo(nominaId).subscribe(response => {
+      const blob = new Blob([response], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       window.open(url);
+    }, error => {
+      alert('Error al descargar el recibo de nómina');
     });
   }
 }

@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IncapacidadService } from '../servicesERP/incapacidad.service';
 import { RegistroService } from '../servicesERP/empleado.service';
 
+
+
+
 @Component({
   selector: 'app-incapacidad',
   templateUrl: './incapacidad.component.html',
@@ -22,11 +25,11 @@ export class IncapacidadComponent implements OnInit {
   ) {
     this.incapacidadForm = this.fb.group({
       folioIncapacidad: ['', [Validators.required, Validators.pattern(/^[A-Z0-9-]+$/)]],
-      rfc: ['', Validators.required],
-      fechaInicial: ['', Validators.required],
-      fechaFinal: ['', Validators.required],
+      rfc: ['', [Validators.required]],
+      fechaInicial: ['', [Validators.required]],
+      fechaFinal: ['', [Validators.required]],
       motivo: ['', [Validators.required, Validators.minLength(10)]],
-      estatus: ['Activa']
+      estatus: ['Activa', [Validators.required]]
     });
   }
 
@@ -35,7 +38,7 @@ export class IncapacidadComponent implements OnInit {
     this.cargarIncapacidades();
   }
 
-  cargarEmpleados(): void {
+ cargarEmpleados (): void {
     this.empleadoService.obtenerEmpleados().subscribe({
       next: (data) => this.empleados = data,
       error: (e) => console.error('Error al cargar empleados', e)
@@ -44,29 +47,50 @@ export class IncapacidadComponent implements OnInit {
 
   cargarIncapacidades(): void {
     this.incapacidadService.obtenerIncapacidades().subscribe({
-      next: (data) => this.incapacidades = data,
+      next: (data) => {
+        this.incapacidades = data.map(inc => ({
+          ...inc,
+          fechaInicial: inc.fechaInicial.split('T')[0],
+          fechaFinal: inc.fechaFinal.split('T')[0]
+        }));
+      },
       error: (e) => console.error('Error al cargar incapacidades', e)
     });
   }
 
   registrar(): void {
     if (this.incapacidadForm.invalid) {
-      this.mensaje = 'Por favor completa todos los campos requeridos';
+      this.mensaje = 'Por favor completa todos los campos requeridos correctamente';
+      this.marcarCamposComoTocados();
       return;
     }
 
-    this.incapacidadService.registrarIncapacidad(this.incapacidadForm.value)
-      .subscribe({
-        next: () => {
-          this.mensaje = 'Incapacidad registrada exitosamente!';
-          this.incapacidadForm.reset({ estatus: 'Activa' });
-          this.cargarIncapacidades();
-        },
-        error: (e) => {
-          console.error(e);
-          this.mensaje = 'Error al registrar incapacidad: ' + (e.error?.message || e.message);
+    const formData = this.incapacidadForm.value;
+    
+    this.incapacidadService.registrarIncapacidad(formData).subscribe({
+      next: () => {
+        this.mensaje = 'Incapacidad registrada exitosamente!';
+        this.incapacidadForm.reset({
+          estatus: 'Activa'
+        });
+        this.cargarIncapacidades();
+      },
+      error: (e) => {
+        console.error('Error completo:', e);
+        if (e.error && typeof e.error === 'object') {
+          this.mensaje = 'Errores: ' + Object.values(e.error).join(', ');
+        } else {
+          this.mensaje = 'Error al registrar incapacidad: ' + 
+            (e.error?.message || e.message || 'Error desconocido');
         }
-      });
+      }
+    });
+  }
+
+  private marcarCamposComoTocados(): void {
+    Object.values(this.incapacidadForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
   }
 
   eliminarIncapacidad(id: number): void {
@@ -86,5 +110,12 @@ export class IncapacidadComponent implements OnInit {
 
   toggleFormulario(): void {
     this.mostrarFormulario = !this.mostrarFormulario;
+    if (this.mostrarFormulario) {
+      this.mensaje = '';
+    }
   }
+
+
+
+
 }

@@ -2,20 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface NominaRequest {
-  rfc: string;
-  periodo: string;
-  diasPagados: number;
-  tipoPago: string;
-}
-
 export interface Nomina {
   idNomina: number;
   rfc: string;
   fecha: string;
   periodo: string;
-  diasPagados: number;
-  tipoPago: string;
   sueldoBruto: number;
   totalPercepciones: number;
   totalDeducciones: number;
@@ -30,21 +21,16 @@ export class NominaService {
 
   constructor(private http: HttpClient) {}
 
+  generarNomina(empleadoId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${empleadoId}`, {}); // sin body
+  }
+  
+
   obtenerNominas(): Observable<Nomina[]> {
-    return this.http.get<Nomina[]>(this.apiUrl);
+    return this.http.get<Nomina[]>(`${this.apiUrl}`);
   }
 
-  crearNomina(nomina: NominaRequest): Observable<Nomina> {
-    return this.http.post<Nomina>(this.apiUrl, nomina);
-  }
-
-  obtenerNominaPorId(id: number): Observable<Nomina> {
-    return this.http.get<Nomina>(`${this.apiUrl}/${id}`);
-  }
-
-  generarPdf(id: number): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/GenerarPDF/${id}`, {
-      responseType: 'blob'
-    });
+  descargarRecibo(nominaId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/recibo/${nominaId}`, { responseType: 'blob' });
   }
 }
