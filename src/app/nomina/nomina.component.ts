@@ -46,12 +46,30 @@ export class NominaComponent implements OnInit {
   }
 
   descargarRecibo(nominaId: number) {
-    this.nominaService.descargarRecibo(nominaId).subscribe(response => {
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
-    }, error => {
-      alert('Error al descargar el recibo de nómina');
+    this.nominaService.descargarRecibo(nominaId).subscribe({
+      next: (response) => {
+        // Crear enlace temporal para descarga
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `recibo_nomina_${nominaId}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error detallado:', err);
+        
+        if (err.status === 404) {
+          alert('Nómina no encontrada');
+        } 
+        else if (err.status === 400) {
+          alert('Datos incompletos para generar el recibo');
+        }
+        else {
+          alert('Error al generar el PDF. Verifica la consola para más detalles.');
+        }
+      }
     });
   }
 }
