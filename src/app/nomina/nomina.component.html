@@ -4,7 +4,7 @@
   <!-- Selección del empleado -->
   <label for="empleado">Seleccionar Empleado:</label>
   <select [(ngModel)]="empleadoSeleccionado" class="form-control mb-2">
-    <option [value]="null" disabled selected>-- Selecciona un empleado --</option>
+    <option [ngValue]="null" disabled>-- Selecciona un empleado --</option>
     <option *ngFor="let empleado of empleados" [value]="empleado.idEmpleado">
       {{ empleado.nombre }} {{ empleado.apellido }}
     </option>
