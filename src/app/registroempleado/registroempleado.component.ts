@@ -84,10 +84,21 @@ export class RegistroempleadoComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error al registrar empleado:', error);
-            this.errorMessage = 'Ocurrió un error al registrar el empleado';
-            this.successMessage = '';
-            setTimeout(() => this.errorMessage = '', 3000);
+            
+            if (error.error?.errors) {
+              // Mostrar todos los errores uno por uno
+              for (const campo in error.error.errors) {
+                if (error.error.errors.hasOwnProperty(campo)) {
+                  console.error(`${campo}: ${error.error.errors[campo].join(', ')}`);
+                }
+              }
+            } else {
+              console.error('Respuesta desconocida del backend:', error.error);
+            }
+          
+            this.errorMessage = 'Error al registrar empleado. Revisa la consola.';
           }
+          
         });
       }
     } else {

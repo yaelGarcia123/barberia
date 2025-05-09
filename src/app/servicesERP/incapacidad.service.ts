@@ -38,24 +38,18 @@ export class IncapacidadService {
   }
 
   registrarIncapacidad(incapacidad: Incapacidad): Observable<Incapacidad> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    // Creamos el payload sin la propiedad empleado
     const payload = {
       folioIncapacidad: incapacidad.folioIncapacidad,
       rfc: incapacidad.rfc,
-      fechaInicial: new Date(incapacidad.fechaInicial).toISOString(),
-      fechaFinal: new Date(incapacidad.fechaFinal).toISOString(),
+      fechaInicial: incapacidad.fechaInicial, // Ya no uses toISOString()
+      fechaFinal: incapacidad.fechaFinal,    // El input date ya envía formato correcto
       motivo: incapacidad.motivo,
       estatus: incapacidad.estatus
     };
-
-    return this.http.post<Incapacidad>(this.apiUrl, payload, { headers })
-      .pipe(
-        catchError(this.handleError)
-      );
+  
+    return this.http.post<Incapacidad>(this.apiUrl, payload).pipe(
+      catchError(this.handleError)
+    );
   }
 
   obtenerIncapacidades(): Observable<Incapacidad[]> {

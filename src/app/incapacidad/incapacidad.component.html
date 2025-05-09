@@ -25,11 +25,12 @@
 
         <div class="mb-3">
           <label class="form-label">Empleado:</label>
-         <!-- <option value="">Seleccione un empleado</option>
-<option *ngFor="let empleado of empleados" [value]="empleado.rfc"> 
-  {{ empleado.rfc }} - {{ empleado.nombre }} {{ empleado.apellido }} 
-</option> -->
-
+          <select formControlName="rfc" class="form-select"> <!-- Añade formControlName aquí -->
+            <option value="">Seleccione un empleado</option>
+            <option *ngFor="let empleado of empleados" [value]="empleado.rfc"> 
+              {{ empleado.rfc }} - {{ empleado.nombre }} {{ empleado.apellido }} 
+            </option>
+          </select>
           <div *ngIf="incapacidadForm.get('rfc')?.invalid && incapacidadForm.get('rfc')?.touched"
                class="text-danger">
             Seleccione un empleado

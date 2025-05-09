@@ -2,25 +2,76 @@
   <h2>Gestión de Nóminas</h2>
 
   <!-- Selección del empleado -->
-  <label for="empleado">Seleccionar Empleado:</label>
-  <select [(ngModel)]="empleadoSeleccionado" class="form-control mb-2">
-    <option [value]="null" disabled selected>-- Selecciona un empleado --</option>
-    <option *ngFor="let empleado of empleados" [value]="empleado.idEmpleado">
-      {{ empleado.nombre }} {{ empleado.apellido }}
-    </option>
-  </select>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="empleado">Seleccionar Empleado:</label>
+      <select [(ngModel)]="empleadoSeleccionado" class="form-control mb-2">
+        <option [ngValue]="null" disabled>-- Selecciona un empleado --</option>
+        <option *ngFor="let empleado of empleados" [value]="empleado.idEmpleado">
+          {{ empleado.nombre }} {{ empleado.apellido }}
+        </option>
+      </select>
+    </div>
+  </div>
 
-  <button (click)="generarNomina()" class="btn btn-primary mb-3">Generar Nómina</button>
+  <!-- Selección de periodo -->
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="fechaInicio">Fecha Inicio Periodo:</label>
+      <input type="date" [(ngModel)]="fechaInicio" class="form-control" (change)="calcularFechaFin()">
+    </div>
+    <div class="col-md-3">
+      <label for="fechaFin">Fecha Fin Periodo:</label>
+      <input type="date" [(ngModel)]="fechaFin" class="form-control" [min]="fechaInicio">
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button (click)="seleccionarPeriodoActual()" class="btn btn-secondary">
+        Periodo Actual
+      </button>
+    </div>
+  </div>
+
+  <button (click)="generarNomina()" class="btn btn-primary mb-3" [disabled]="!empleadoSeleccionado">
+    Generar Nómina
+  </button>
+
+  <!-- Filtros para el listado -->
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="filtroInicio">Filtrar desde:</label>
+      <input type="date" [(ngModel)]="filtroInicio" class="form-control" (change)="filtrarNominas()">
+    </div>
+    <div class="col-md-3">
+      <label for="filtroFin">Filtrar hasta:</label>
+      <input type="date" [(ngModel)]="filtroFin" class="form-control" (change)="filtrarNominas()">
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button (click)="limpiarFiltros()" class="btn btn-outline-secondary">
+        Limpiar Filtros
+      </button>
+    </div>
+  </div>
 
   <hr>
 
   <h3>Listado de Nóminas</h3>
-  <table class="table table-bordered table-striped">
+  
+  <!-- Mostrar mensaje si está cargando -->
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando nóminas...</p>
+  </div>
+
+  <table class="table table-bordered table-striped" *ngIf="!cargando">
     <thead class="thead-dark">
       <tr>
-        <th>RFC</th>
-        <th>Fecha</th>
+        <th>Empleado</th>
         <th>Periodo</th>
+        <th>Días Pagados</th>
+      
+
         <th>Sueldo Bruto</th>
         <th>Percepciones</th>
         <th>Deducciones</th>
@@ -29,14 +80,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let nomina of nominas">
-        <td>{{ nomina.rfc }}</td>
-        <td>{{ nomina.fecha | date:'shortDate' }}</td>
+      <tr *ngFor="let nomina of nominasFiltradas">
+        <td>{{ nomina.empleado?.rfc }}</td>
         <td>{{ nomina.periodo }}</td>
+        <td>{{ nomina.diasPagados }}</td>
+ 
+
         <td>{{ nomina.sueldoBruto | currency }}</td>
         <td>{{ nomina.totalPercepciones | currency }}</td>
         <td>{{ nomina.totalDeducciones | currency }}</td>
-        <td>{{ nomina.sueldoNeto | currency }}</td>
+        <td>{{ (nomina.totalPercepciones-nomina.totalDeducciones) | currency }}</td>
         <td>
           <button (click)="descargarRecibo(nomina.idNomina)" class="btn btn-success btn-sm">
             Descargar Recibo
@@ -45,4 +98,12 @@
       </tr>
     </tbody>
   </table>
+<<<<<<< HEAD
+=======
+  
+  <!-- Mensaje cuando no hay nóminas -->
+  <div *ngIf="nominasFiltradas.length === 0 && !cargando" class="alert alert-info">
+    No se encontraron nóminas para los filtros seleccionados
+  </div>
+>>>>>>> 08436382b64e984cfba54428b5d48f0cadd62829
 </div>
