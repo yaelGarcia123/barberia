@@ -30,11 +30,10 @@ export class NominaService {
 
   constructor(private http: HttpClient) { }
 
-<<<<<<< HEAD
 
-  generarNomina(empleadoId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${empleadoId}`, {}); // sin body
-=======
+
+  
+
   obtenerNominas(fechaInicio?: string, fechaFin?: string): Observable<Nomina[]> {
     let url = this.apiUrl;
     
@@ -44,7 +43,7 @@ export class NominaService {
     }
     
     return this.http.get<Nomina[]>(url);
->>>>>>> 08436382b64e984cfba54428b5d48f0cadd62829
+
   }
 
   generarNomina(empleadoId: number, fechaInicio?: string, fechaFin?: string): Observable<any> {
@@ -62,12 +61,10 @@ export class NominaService {
       responseType: 'blob'
     });
   }
-<<<<<<< HEAD
+
 
 }
 
 
 
-=======
-}
->>>>>>> 08436382b64e984cfba54428b5d48f0cadd62829
+
