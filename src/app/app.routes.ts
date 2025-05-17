@@ -36,7 +36,7 @@ export const routes: Routes = [
     { path: 'inventario', component: InventarioComponent },
     { path: 'logistica', component: LogisticaComponent },
     { path: 'nuevacompra', component: NuevacompraComponent },
-    { path:'productos', component: ProductosComponent},
+    { path:'productos', component: ProductosComponent},//no lo ocuparemos 
     { path: 'account', component: AccountComponent},
     { path:'sale', component: SaleComponent},
     { path:'register', component: RegisterComponent},
