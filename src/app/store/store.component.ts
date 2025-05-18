@@ -20,10 +20,11 @@ interface Product {
 interface CartItem {
   id: number;
   nombre: string;
-  precio: number;
+  precioBase: number;  // Precio sin impuestos
+  impuestoPorcentaje: number; // 16 para 16%
   cantidad: number;
-  total: number;
-  impuesto: number; // Añade esta propiedad
+  precioConImpuesto: number; // Precio unitario con impuesto
+  totalPorProducto: number; // Cantidad * precio con impuesto
 
 }
 
@@ -73,47 +74,57 @@ export class StoreComponent implements OnInit {
   }
 
   addToCart(product: Product, quantityInput: HTMLInputElement): void {
-    const quantity = parseInt(quantityInput.value, 10);
-    if (quantity <= 0 || isNaN(quantity)) {
-      alert('Ingresa una cantidad válida.');
-      return;
-    }
-  
-    if (product.existencia < quantity) {
-      alert(`Solo quedan ${product.existencia} unidades disponibles.`);
-      return;
-    }
-  
-    const existingItem = this.cart.find(item => item.id === product.id);
-    if (existingItem) {
-      if (existingItem.cantidad + quantity > product.existencia) {
-        alert(`No puedes agregar más de ${product.existencia} unidades.`);
-        return;
-      }
-      existingItem.cantidad += quantity;
-      existingItem.total = existingItem.cantidad * (product.precio * (1 + product.impuesto));
-    } else {
-      this.cart.push({
-        id: product.id,
-        nombre: product.nombre,
-        precio: product.precio,
-        cantidad: quantity,
-        total: quantity * (product.precio * (1 + product.impuesto)),
-        impuesto: product.impuesto // Añade el impuesto aquí
-      });
-    }
-  
-    quantityInput.value = '1';
+  const quantity = parseInt(quantityInput.value, 10);
+  if (quantity <= 0 || isNaN(quantity)) {
+    alert('Ingresa una cantidad válida.');
+    return;
   }
 
+  if (product.existencia < quantity) {
+    alert(`Solo quedan ${product.existencia} unidades disponibles.`);
+    return;
+  }
+const impuestoDecimal = product.impuesto / 100;
+  const precioConImpuesto = product.precio * (1 + impuestoDecimal);
+
+  const existingItem = this.cart.find(item => item.id === product.id);
+  if (existingItem) {
+    if (existingItem.cantidad + quantity > product.existencia) {
+      alert(`No puedes agregar más de ${product.existencia} unidades.`);
+      return;
+    }
+    existingItem.cantidad += quantity;
+    existingItem.totalPorProducto = existingItem.cantidad * precioConImpuesto;
+  } else {
+    this.cart.push({
+      id: product.id,
+      nombre: product.nombre,
+      precioBase: product.precio,
+      impuestoPorcentaje: product.impuesto,
+      cantidad: quantity,
+      precioConImpuesto: precioConImpuesto,
+      totalPorProducto: quantity * precioConImpuesto
+    });
+  }
+
+  quantityInput.value = '1';
+}
+   
   removeFromCart(id: number): void {
     this.cart = this.cart.filter(item => item.id !== id);
   }
 
-  getTotal(): number {
-    return this.cart.reduce((sum, item) => sum + item.total, 0);
-  }
+ getTotal(): number {
+  return this.cart.reduce((sum, item) => sum + item.totalPorProducto, 0);
+}
 
+getSubtotal(): number {
+  return this.cart.reduce((sum, item) => sum + (item.precioBase * item.cantidad), 0);
+}
+
+getTotalImpuestos(): number {
+  return this.getTotal() - this.getSubtotal();
+}
   showConfirmSaleModal(): void {
     if (this.cart.length === 0) {
       alert('El carrito está vacío.');
@@ -149,7 +160,7 @@ End of the night, it's going down
   Detalles: this.cart.map(item => ({
     ProductoId: item.id,
     Cantidad: item.cantidad,
-    Impuesto: item.impuesto // Añadir el impuesto si es necesario
+    Impuesto: item.impuestoPorcentaje // Añadir el impuesto si es necesario
   }))
 };
 

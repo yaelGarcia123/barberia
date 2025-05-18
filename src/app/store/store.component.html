@@ -44,7 +44,7 @@
           <p class="text-center"><strong>Categoría:</strong> {{ product.categoria }}</p>
           <p class="text-center mb-1"><strong>Precio:</strong> $ {{ product.precio.toFixed(2) }}</p>
           <p class="text-center mb-1"><strong>Impuesto:</strong> {{ product.impuesto }}%</p>
-          <p class="text-center mb-2"><strong>Total:</strong> $ {{ (product.precio * (1 + product.impuesto)).toFixed(2) }}</p>
+          <p class="text-center mb-2"><strong>Total:</strong> $ {{ (product.precio * (1 + (product.impuesto/100))).toFixed(2) }}</p>
           <p class="text-center" [ngClass]="{'text-danger': product.existencia === 0, 'text-success': product.existencia > 0}">
             <strong>Disponibles:</strong> {{ product.existencia }}
           </p>
@@ -62,17 +62,41 @@
 <div class="cart-dropdown shadow-lg" *ngIf="cartVisible">
   <h5 class="text-center mb-4">Tu carrito</h5>
   <ul class="list-group mb-3">
-    <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between align-items-center">
-      <div>
-        <strong>{{ item.nombre }}</strong> (x{{ item.cantidad }})<br>
-        <small class="text-muted">$ {{ item.precio.toFixed(2) }} c/u</small>
+    <li *ngFor="let item of cart" class="list-group-item">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <strong>{{ item.nombre }}</strong> (x{{ item.cantidad }})<br>
+          <small class="text-muted">
+            ${{ item.precioBase.toFixed(2) }} + {{ item.impuestoPorcentaje }}% = 
+            ${{ item.precioConImpuesto.toFixed(2) }} c/u
+          </small>
+        </div>
+        <button class="btn btn-sm btn-danger" (click)="removeFromCart(item.id)">X</button>
       </div>
-      <button class="btn btn-sm btn-danger" (click)="removeFromCart(item.id)">X</button>
+      <div class="text-end mt-2">
+        <strong>${{ item.totalPorProducto.toFixed(2) }}</strong>
+      </div>
     </li>
   </ul>
-  <div class="d-flex justify-content-between mt-3">
-    <strong>Total: ${{ getTotal().toFixed(2) }}</strong>
-    <button class="btn btn-primary btn-sm" (click)="showConfirmSaleModal()">Pagar</button>
+  
+  <!-- Desglose de totales -->
+  <div class="px-3 mt-3">
+    <div class="d-flex justify-content-between">
+      <span>Subtotal:</span>
+      <span>${{ getSubtotal().toFixed(2) }}</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <span>Impuestos:</span>
+      <span>${{ getTotalImpuestos().toFixed(2) }}</span>
+    </div>
+    <div class="d-flex justify-content-between fw-bold mt-2 pt-2 border-top">
+      <span>Total:</span>
+      <span>${{ getTotal().toFixed(2) }}</span>
+    </div>
+  </div>
+  
+  <div class="d-grid mt-3">
+    <button class="btn btn-primary" (click)="showConfirmSaleModal()">Pagar</button>
   </div>
 </div>
 
@@ -89,20 +113,34 @@
         <div class="mb-4">
           <h4>Productos:</h4>
           <ul class="list-group">
-            <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between">
-              <div>
-                {{ item.nombre }} (x{{ item.cantidad }})
-                <br>
-                <small class="text-muted">$ {{ item.precio.toFixed(2) }} c/u</small>
+            <li *ngFor="let item of cart" class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <div>
+                  {{ item.nombre }} (x{{ item.cantidad }})
+                  <div class="text-muted small">
+                    ${{ item.precioBase.toFixed(2) }} + {{ item.impuestoPorcentaje }}%
+                  </div>
+                </div>
+                <strong>${{ item.totalPorProducto.toFixed(2) }}</strong>
               </div>
-              <strong>$ {{ (item.precio * item.cantidad).toFixed(2) }}</strong>
             </li>
           </ul>
         </div>
 
-        <!-- Total -->
-        <div class="mb-4">
-          <h5>Total a pagar: ${{ getTotal().toFixed(2) }}</h5>
+        <!-- Desglose de totales -->
+        <div class="border-top pt-3">
+          <div class="d-flex justify-content-between">
+            <span>Subtotal:</span>
+            <span>${{ getSubtotal().toFixed(2) }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Impuestos ({{ cart[0]?.impuestoPorcentaje || 0 }}%):</span>
+            <span>${{ getTotalImpuestos().toFixed(2) }}</span>
+          </div>
+          <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
+            <span>Total a pagar:</span>
+            <span>${{ getTotal().toFixed(2) }}</span>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
